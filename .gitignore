@@ -1,0 +1,40 @@
+# Build e IDE
+.vs/
+.vscode/
+.idea/
+bin/
+obj/
+build/
+out/
+artifacts/
+TestResults/
+coverage/
+
+# Logs e relatórios locais
+*.log
+reports/
+support-bundles/
+crash-dumps/
+*.dmp
+
+# Credenciais e materiais criptográficos
+*.pfx
+*.p12
+*.key
+*.pem
+*.p7b
+*.p7c
+
+# Configuração local
+*.user
+*.suo
+*.local.json
+.env
+.env.*
+
+# Temporários do sistema
+Thumbs.db
+Desktop.ini
+*.tmp
+*.bak
+~$*
