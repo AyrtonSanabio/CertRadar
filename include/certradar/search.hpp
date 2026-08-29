@@ -59,6 +59,9 @@ using ProgressCallback = std::function<void(const SearchProgress&)>;
 
 bool has_a1_extension(const std::filesystem::path& path);
 bool should_traverse_directory(std::uint32_t windows_attributes) noexcept;
+CandidateState inspect_pkcs12_container(
+    const std::filesystem::path& path,
+    std::uintmax_t maximum_size);
 SearchResult search_files(
     const std::vector<std::filesystem::path>& roots,
     const SearchOptions& options = {});

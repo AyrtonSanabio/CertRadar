@@ -132,3 +132,25 @@ TEST_CASE("paused search resumes cooperatively") {
     CHECK(pending.wait_for(std::chrono::seconds(2)) == std::future_status::ready);
     CHECK(pending.get().status == certradar::ScanStatus::completed);
 }
+
+TEST_CASE("container inspection rejects oversized and malformed candidates without a password") {
+    TemporaryDirectory fixture;
+    fixture.create_file("malformado.pfx", "isto nao e um PKCS12");
+
+    CHECK(certradar::inspect_pkcs12_container(fixture.path() / "malformado.pfx", 4) ==
+          certradar::CandidateState::too_large);
+    CHECK(certradar::inspect_pkcs12_container(fixture.path() / "malformado.pfx", 1024) ==
+          certradar::CandidateState::invalid);
+}
+
+TEST_CASE("validated search classifies a malformed candidate instead of executing it") {
+    TemporaryDirectory fixture;
+    fixture.create_file("suspeito.p12", "dados aleatorios");
+    certradar::SearchOptions options;
+    options.validate_containers = true;
+
+    const auto result = certradar::search_files({fixture.path()}, options);
+
+    REQUIRE(result.candidates.size() == 1);
+    CHECK(result.candidates.front().state == certradar::CandidateState::invalid);
+}

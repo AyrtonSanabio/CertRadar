@@ -1,11 +1,16 @@
 #include "certradar/search.hpp"
 
+#define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <wincrypt.h>
 
 #include <algorithm>
 #include <cwctype>
 #include <deque>
+#include <fstream>
+#include <limits>
+#include <vector>
 
 namespace certradar {
 
@@ -40,6 +45,30 @@ bool has_a1_extension(const std::filesystem::path& path) {
 bool should_traverse_directory(const std::uint32_t windows_attributes) noexcept {
     return (windows_attributes & FILE_ATTRIBUTE_DIRECTORY) != 0 &&
            (windows_attributes & FILE_ATTRIBUTE_REPARSE_POINT) == 0;
+}
+
+CandidateState inspect_pkcs12_container(
+    const std::filesystem::path& path,
+    const std::uintmax_t maximum_size) {
+    std::error_code error;
+    const auto size = std::filesystem::file_size(path, error);
+    if (error) return CandidateState::inaccessible;
+    if (size > maximum_size || size > std::numeric_limits<DWORD>::max()) {
+        return CandidateState::too_large;
+    }
+
+    std::ifstream input(path, std::ios::binary);
+    if (!input) return CandidateState::inaccessible;
+    std::vector<unsigned char> content(static_cast<std::size_t>(size));
+    if (!content.empty()) {
+        input.read(reinterpret_cast<char*>(content.data()), static_cast<std::streamsize>(content.size()));
+        if (!input) return CandidateState::inaccessible;
+    }
+
+    CRYPT_DATA_BLOB blob{};
+    blob.cbData = static_cast<DWORD>(content.size());
+    blob.pbData = content.empty() ? nullptr : content.data();
+    return PFXIsPFXBlob(&blob) != FALSE ? CandidateState::recognized : CandidateState::invalid;
 }
 
 SearchResult search_files(
@@ -113,8 +142,12 @@ SearchResult search_files(
             error.clear();
             if (!entry.is_regular_file(error) || error || !has_a1_extension(entry.path())) continue;
             const auto size = entry.file_size(error);
+            CandidateState state = CandidateState::extension_match;
+            if (options.validate_containers) {
+                state = inspect_pkcs12_container(entry.path(), options.maximum_candidate_size);
+            }
             result.candidates.push_back({
-                entry.path(), error ? 0 : size, CandidateState::extension_match});
+                entry.path(), error ? 0 : size, state});
             if (progress) progress({result.directories_visited, result.candidates.size()});
         }
     }

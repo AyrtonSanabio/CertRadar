@@ -69,7 +69,7 @@ add_executable(certradar_tests
     tests/search_plan_tests.cpp
 )
 if(WIN32)
-    target_link_libraries(certradar_core PRIVATE advapi32 ole32 shell32)
+    target_link_libraries(certradar_core PRIVATE advapi32 crypt32 ole32 shell32)
 endif()
 target_link_libraries(certradar_tests PRIVATE certradar_core doctest::doctest)
 certradar_enable_strict_warnings(certradar_tests)
