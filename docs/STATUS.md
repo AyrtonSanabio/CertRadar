@@ -14,8 +14,9 @@ Atualizado em 28 de agosto de 2026.
 | T007 — Busca iterativa no perfil | Concluída | Commit local `9cf82aa`; fila testada |
 | T008 — Permissões e reparse points | Concluída | Commit local `89fa857`; segurança testada |
 | T009 — Outros perfis e discos locais | Concluída | Commit local `43eaa32`; rede excluída |
-| T010 — Unidades removíveis | Concluída | Removíveis entram por último; falhas ficam isoladas |
-| T011 — Progresso, pausa e cancelamento | Próxima | Execução contínua autorizada |
+| T010 — Unidades removíveis | Concluída | Commit local `3a8ea57`; fase final testada |
+| T011 — Progresso, pausa e cancelamento | Concluída | Controle cooperativo e parcial testados |
+| T012 — Reconhecimento PFX/P12 | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

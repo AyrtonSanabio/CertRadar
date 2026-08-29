@@ -5,7 +5,9 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <future>
 #include <string>
+#include <thread>
 
 namespace {
 
@@ -94,4 +96,39 @@ TEST_CASE("unreadable or missing roots do not abort remaining roots") {
     CHECK(result.errors == 1);
     REQUIRE(result.candidates.size() == 1);
     CHECK(result.candidates.front().path.filename() == "encontrado.pfx");
+}
+
+TEST_CASE("cancellation stops new directory work and keeps partial results") {
+    TemporaryDirectory fixture;
+    fixture.create_file("primeiro.pfx");
+    fixture.create_file("subpasta/segundo.pfx");
+    certradar::SearchOptions options;
+    options.recursive = true;
+    certradar::SearchControl control;
+
+    const auto result = certradar::search_files(
+        {fixture.path()}, options, control,
+        [&control](const certradar::SearchProgress& progress) {
+            if (progress.directories_visited == 1) control.cancel();
+        });
+
+    CHECK(result.status == certradar::ScanStatus::cancelled);
+    CHECK(result.directories_visited == 1);
+    CHECK(result.candidates.size() <= 1);
+}
+
+TEST_CASE("paused search resumes cooperatively") {
+    TemporaryDirectory fixture;
+    fixture.create_file("certificado.pfx");
+    certradar::SearchControl control;
+    control.request_pause();
+
+    auto pending = std::async(std::launch::async, [&] {
+        return certradar::search_files(
+            {fixture.path()}, certradar::SearchOptions{}, control, {});
+    });
+    CHECK(pending.wait_for(std::chrono::milliseconds(50)) == std::future_status::timeout);
+    control.resume();
+    CHECK(pending.wait_for(std::chrono::seconds(2)) == std::future_status::ready);
+    CHECK(pending.get().status == certradar::ScanStatus::completed);
 }

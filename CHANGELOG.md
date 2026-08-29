@@ -29,3 +29,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Contenção de falhas por diretório, contagem separada de acesso negado e recusa de junções/reparse points para impedir ciclos.
 - Plano de busca por fases para perfil atual, perfis irmãos acessíveis e discos fixos, excluindo unidades de rede por padrão.
 - Unidades removíveis entram somente na fase final; mídias ópticas e caminhos remotos continuam fora do escopo padrão.
+- Progresso incremental, pausa e cancelamento cooperativos, preservando resultados parciais e liberando a busca sem forçar threads.
