@@ -25,8 +25,9 @@ Atualizado em 28 de agosto de 2026.
 | T018 — Associação de chave privada | Concluída | Commit local `1101b91`; sem adquirir chave |
 | T019 — Cadeia local | Concluída | Commit local `909d2d3`; erros classificados |
 | T020 — Revogação online | Concluída | Commit local `a176469`; timeout testado |
-| T021 — Serviço de cartão inteligente | Concluída | `SCardSvr` consultado somente leitura |
-| T022 — Leitores e cartões | Próxima | Execução contínua autorizada |
+| T021 — Serviço de cartão inteligente | Concluída | Commit local `fccdb74`; estado testado |
+| T022 — Leitores e cartões | Concluída | WinSCard enumera presença sem transação/PIN |
+| T023 — Provider e middleware | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

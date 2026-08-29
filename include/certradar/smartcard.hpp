@@ -13,6 +13,20 @@ struct SmartCardService {
     unsigned long error_code{0};
 };
 
+struct SmartCardReader {
+    std::wstring name;
+    bool card_present{false};
+    bool unavailable{false};
+    unsigned long state{0};
+};
+
+struct ReaderEnumeration {
+    bool success{false};
+    long error_code{0};
+    std::vector<SmartCardReader> readers;
+};
+
 SmartCardService query_smart_card_service();
+ReaderEnumeration enumerate_smart_card_readers();
 
 }  // namespace certradar

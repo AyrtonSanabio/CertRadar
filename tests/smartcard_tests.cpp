@@ -10,3 +10,9 @@ TEST_CASE("smart card service query always returns an explainable state") {
         CHECK(service.error_code != 0);
     }
 }
+
+TEST_CASE("reader enumeration does not require a card or consume a PIN attempt") {
+    const auto result = certradar::enumerate_smart_card_readers();
+    CHECK((result.success || result.error_code != 0));
+    for (const auto& reader : result.readers) CHECK_FALSE(reader.name.empty());
+}

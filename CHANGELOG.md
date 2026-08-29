@@ -40,3 +40,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Construção de cadeia usando apenas cache local e explicação separada de validade, raiz não confiável, cadeia parcial, revogação e restrições.
 - Validação online opcional com timeout explícito, checagem de revogação da cadeia sem raiz e distinção entre revogado e consulta indeterminada.
 - Consulta somente leitura do estado do serviço de cartão inteligente, distinguindo parado, pendente, ausente e inacessível.
+- Enumeração WinSCard de leitores e presença do cartão/token com timeout zero, sem abrir transação nem consumir tentativa de PIN.
