@@ -53,6 +53,7 @@ add_library(certradar_core STATIC
     src/product_info.cpp
     src/search.cpp
     src/search_plan.cpp
+    src/signature_test.cpp
     src/smartcard.cpp
     src/ui_model.cpp
 )
@@ -71,11 +72,12 @@ add_executable(certradar_tests
     tests/product_info_tests.cpp
     tests/search_tests.cpp
     tests/search_plan_tests.cpp
+    tests/signature_test_tests.cpp
     tests/smartcard_tests.cpp
     tests/ui_model_tests.cpp
 )
 if(WIN32)
-    target_link_libraries(certradar_core PRIVATE advapi32 crypt32 ole32 shell32 winscard)
+    target_link_libraries(certradar_core PRIVATE advapi32 bcrypt crypt32 ncrypt ole32 shell32 winscard)
 endif()
 target_link_libraries(certradar_tests PRIVATE certradar_core doctest::doctest)
 certradar_enable_strict_warnings(certradar_tests)

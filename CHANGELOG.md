@@ -43,3 +43,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Enumeração WinSCard de leitores e presença do cartão/token com timeout zero, sem abrir transação nem consumir tentativa de PIN.
 - Identificação do nome de middleware/provider associado ao certificado e classificação entre CSP legado e KSP moderno.
 - Máquina de estados A3 separando serviço, leitor, dispositivo, middleware e associação de chave, evitando diagnósticos genéricos de “token não funciona”.
+- Prova funcional sintética com chave RSA efêmera, desafio aleatório, assinatura e verificação locais; buffers sensíveis são zerados e nada é persistido.
