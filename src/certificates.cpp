@@ -88,6 +88,22 @@ std::vector<std::string> enhanced_usages(PCCERT_CONTEXT context) {
     return result;
 }
 
+void read_private_key_association(PCCERT_CONTEXT context, CertificateRecord& record) {
+    DWORD size = 0;
+    if (CertGetCertificateContextProperty(
+            context, CERT_KEY_PROV_INFO_PROP_ID, nullptr, &size) == FALSE || size == 0) {
+        return;
+    }
+    std::vector<BYTE> buffer(size);
+    if (CertGetCertificateContextProperty(
+            context, CERT_KEY_PROV_INFO_PROP_ID, buffer.data(), &size) == FALSE) {
+        return;
+    }
+    const auto* const information = reinterpret_cast<const CRYPT_KEY_PROV_INFO*>(buffer.data());
+    record.has_private_key_association = true;
+    if (information->pwszProvName != nullptr) record.provider = utf8(information->pwszProvName);
+}
+
 }  // namespace
 
 CertificateValidity classify_certificate_validity(
@@ -135,6 +151,7 @@ CertificateStoreResult enumerate_personal_certificates(const StoreScope scope) {
             filetime_value(context->pCertInfo->NotAfter),
             filetime_value(now));
         record.enhanced_key_usages = enhanced_usages(context);
+        read_private_key_association(context, record);
         record.encoded_certificate.assign(
             context->pbCertEncoded, context->pbCertEncoded + context->cbCertEncoded);
         result.certificates.push_back(std::move(record));

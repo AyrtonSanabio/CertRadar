@@ -36,3 +36,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Enumeração somente leitura de certificados pessoais do usuário atual, mantendo apenas o certificado público codificado para análises locais posteriores.
 - Leitura opcional do store pessoal da máquina sem solicitar elevação; acesso indisponível retorna código observável em vez de abortar o diagnóstico.
 - Interpretação X.509 de titular, emissor, série, impressão digital, período UTC, validade e usos estendidos, com alerta de vencimento em 30 dias.
+- Detecção aparente de chave privada pela propriedade de provider do certificado, sem abrir container, exportar chave ou provocar PIN.

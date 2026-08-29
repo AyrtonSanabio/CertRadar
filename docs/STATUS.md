@@ -21,8 +21,9 @@ Atualizado em 28 de agosto de 2026.
 | T014 — Interface de resultados | Concluída | Commit local `d0a4d0c`; x64/Win32 aprovados |
 | T015 — Store pessoal do usuário | Concluída | Commit local `d39d3b9`; store lido |
 | T016 — Store pessoal da máquina | Concluída | Commit local `6262e29`; falha isolada |
-| T017 — Interpretação X.509 | Concluída | Identidade, validade e EKU coletados |
-| T018 — Associação de chave privada | Próxima | Execução contínua autorizada |
+| T017 — Interpretação X.509 | Concluída | Commit local `eac4508`; campos testados |
+| T018 — Associação de chave privada | Concluída | Propriedade CSP/KSP lida sem adquirir chave |
+| T019 — Cadeia local | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

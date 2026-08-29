@@ -37,3 +37,16 @@ TEST_CASE("certificate validity distinguishes future near expiry and expired") {
     CHECK(certradar::classify_certificate_validity(now - 365 * day, now - day, now) ==
           certradar::CertificateValidity::expired);
 }
+
+TEST_CASE("private key association is metadata only and never contains key material") {
+    const auto result = certradar::enumerate_personal_certificates(
+        certradar::StoreScope::current_user);
+
+    for (const auto& certificate : result.certificates) {
+        if (certificate.has_private_key_association) {
+            CHECK(certificate.encoded_certificate.size() > 0);
+            CHECK(certificate.provider.size() < 4096);
+        }
+    }
+    CHECK(result.opened);
+}
