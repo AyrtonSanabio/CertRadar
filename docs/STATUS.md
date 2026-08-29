@@ -27,8 +27,9 @@ Atualizado em 28 de agosto de 2026.
 | T020 — Revogação online | Concluída | Commit local `a176469`; timeout testado |
 | T021 — Serviço de cartão inteligente | Concluída | Commit local `fccdb74`; estado testado |
 | T022 — Leitores e cartões | Concluída | Commit local `281fd03`; WinSCard testado |
-| T023 — Provider e middleware | Concluída | Nome do provider e CSP/KSP classificados |
-| T024 — Estados separados de A3 | Próxima | Execução contínua autorizada |
+| T023 — Provider e middleware | Concluída | Commit local `246dde1`; CSP/KSP testados |
+| T024 — Estados separados de A3 | Concluída | Máquina de estados com cinco falhas distintas |
+| T025 — Assinatura sintética A1 | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

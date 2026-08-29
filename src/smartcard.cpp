@@ -105,4 +105,13 @@ ReaderEnumeration enumerate_smart_card_readers() {
     return result;
 }
 
+A3State diagnose_a3_state(const A3Evidence& evidence) noexcept {
+    if (evidence.service != ServiceState::running) return A3State::service_unavailable;
+    if (!evidence.reader_detected) return A3State::reader_missing;
+    if (!evidence.device_present) return A3State::device_absent;
+    if (!evidence.provider_detected) return A3State::middleware_missing;
+    if (!evidence.key_associated) return A3State::key_unavailable;
+    return A3State::apparently_ready;
+}
+
 }  // namespace certradar
