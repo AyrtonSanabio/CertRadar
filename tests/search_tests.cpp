@@ -73,3 +73,25 @@ TEST_CASE("recursive search visits the current profile iteratively") {
     CHECK(result.candidates[0].path.filename() == "outro.p12");
     CHECK(result.candidates[1].path.filename() == "certificado.pfx");
 }
+
+TEST_CASE("directory safety policy refuses Windows reparse points") {
+    constexpr std::uint32_t directory = 0x00000010;
+    constexpr std::uint32_t reparse_point = 0x00000400;
+
+    CHECK(certradar::should_traverse_directory(directory));
+    CHECK_FALSE(certradar::should_traverse_directory(directory | reparse_point));
+    CHECK_FALSE(certradar::should_traverse_directory(reparse_point));
+}
+
+TEST_CASE("unreadable or missing roots do not abort remaining roots") {
+    TemporaryDirectory fixture;
+    fixture.create_file("encontrado.pfx");
+    const auto missing = fixture.path() / "nao-existe";
+
+    const auto result = certradar::search_files({missing, fixture.path()});
+
+    CHECK(result.status == certradar::ScanStatus::completed);
+    CHECK(result.errors == 1);
+    REQUIRE(result.candidates.size() == 1);
+    CHECK(result.candidates.front().path.filename() == "encontrado.pfx");
+}

@@ -26,3 +26,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Resolução de Downloads, Área de Trabalho e Documentos pela Known Folders API, preservando a ordem de busca do suporte.
 - Busca inicial determinística por arquivos `.pfx` e `.p12`, sem diferenciar maiúsculas e sem abrir ou executar candidatos.
 - Varredura iterativa em largura para perfis com árvores profundas, sem recursão da pilha.
+- Contenção de falhas por diretório, contagem separada de acesso negado e recusa de junções/reparse points para impedir ciclos.

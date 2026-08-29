@@ -31,6 +31,7 @@ struct SearchResult {
 };
 
 bool has_a1_extension(const std::filesystem::path& path);
+bool should_traverse_directory(std::uint32_t windows_attributes) noexcept;
 SearchResult search_files(
     const std::vector<std::filesystem::path>& roots,
     const SearchOptions& options = {});
