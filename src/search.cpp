@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cwctype>
+#include <deque>
 
 namespace certradar {
 
@@ -19,7 +20,10 @@ SearchResult search_files(
     SearchResult result;
     result.status = ScanStatus::running;
 
-    for (const auto& root : roots) {
+    std::deque<std::filesystem::path> pending(roots.begin(), roots.end());
+    while (!pending.empty()) {
+        const auto root = pending.front();
+        pending.pop_front();
         std::error_code error;
         std::filesystem::directory_iterator iterator(
             root, std::filesystem::directory_options::skip_permission_denied, error);
@@ -37,6 +41,11 @@ SearchResult search_files(
 
         for (const auto& entry : entries) {
             error.clear();
+            if (options.recursive && entry.is_directory(error) && !error) {
+                pending.push_back(entry.path());
+                continue;
+            }
+            error.clear();
             if (!entry.is_regular_file(error) || error || !has_a1_extension(entry.path())) continue;
             const auto size = entry.file_size(error);
             result.candidates.push_back({
@@ -44,7 +53,6 @@ SearchResult search_files(
         }
     }
 
-    static_cast<void>(options);
     result.status = ScanStatus::completed;
     return result;
 }

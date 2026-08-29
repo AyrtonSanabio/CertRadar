@@ -57,3 +57,19 @@ TEST_CASE("priority search finds only direct PFX and P12 candidates") {
     CHECK(result.candidates[0].path.filename() == "primeiro.PFX");
     CHECK(result.candidates[1].path.filename() == "segundo.p12");
 }
+
+TEST_CASE("recursive search visits the current profile iteratively") {
+    TemporaryDirectory fixture;
+    fixture.create_file("nivel-1/nivel-2/certificado.pfx");
+    fixture.create_file("nivel-1/outro.p12");
+
+    certradar::SearchOptions options;
+    options.recursive = true;
+    const auto result = certradar::search_files({fixture.path()}, options);
+
+    CHECK(result.status == certradar::ScanStatus::completed);
+    CHECK(result.directories_visited == 3);
+    REQUIRE(result.candidates.size() == 2);
+    CHECK(result.candidates[0].path.filename() == "outro.p12");
+    CHECK(result.candidates[1].path.filename() == "certificado.pfx");
+}
