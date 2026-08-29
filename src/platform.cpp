@@ -78,6 +78,18 @@ WindowsPlatform detect_windows_platform() {
     return result;
 }
 
+SupportMode classify_support_mode(const WindowsPlatform& platform) noexcept {
+    if (platform.major >= 10) return SupportMode::full;
+    if (platform.major == 6 && platform.minor == 3) return SupportMode::compatible;
+    if (platform.major == 6 && platform.minor == 1 && platform.service_pack_major >= 1) {
+        return SupportMode::compatible;
+    }
+    if (platform.major == 5 && platform.minor == 1 && platform.service_pack_major >= 3) {
+        return SupportMode::legacy;
+    }
+    return SupportMode::unsupported;
+}
+
 PlatformFacts to_platform_facts(const WindowsPlatform& platform) {
     PlatformFacts facts;
     facts.version_major = platform.major;
@@ -87,6 +99,7 @@ PlatformFacts to_platform_facts(const WindowsPlatform& platform) {
     facts.edition = platform.edition;
     facts.service_pack = platform.service_pack;
     facts.elevated = platform.elevated;
+    facts.mode = classify_support_mode(platform);
     return facts;
 }
 

@@ -19,6 +19,7 @@ struct WindowsPlatform {
 };
 
 WindowsPlatform detect_windows_platform();
+SupportMode classify_support_mode(const WindowsPlatform& platform) noexcept;
 PlatformFacts to_platform_facts(const WindowsPlatform& platform);
 
 }  // namespace certradar
