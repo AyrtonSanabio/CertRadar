@@ -47,6 +47,7 @@ endfunction()
 
 add_library(certradar_core STATIC
     src/facts.cpp
+    src/platform.cpp
     src/product_info.cpp
 )
 target_include_directories(certradar_core PUBLIC "${PROJECT_SOURCE_DIR}/include")
@@ -58,8 +59,12 @@ enable_testing()
 add_executable(certradar_tests
     tests/test_main.cpp
     tests/facts_tests.cpp
+    tests/platform_tests.cpp
     tests/product_info_tests.cpp
 )
+if(WIN32)
+    target_link_libraries(certradar_core PRIVATE advapi32)
+endif()
 target_link_libraries(certradar_tests PRIVATE certradar_core doctest::doctest)
 certradar_enable_strict_warnings(certradar_tests)
 
