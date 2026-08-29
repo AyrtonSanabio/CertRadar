@@ -12,8 +12,9 @@ Atualizado em 28 de agosto de 2026.
 | T005 — Pastas prioritárias | Concluída | Commit local `902ffad`; Known Folders testadas |
 | T006 — Busca prioritária PFX/P12 | Concluída | Commit local `eed678b`; extensões testadas |
 | T007 — Busca iterativa no perfil | Concluída | Commit local `9cf82aa`; fila testada |
-| T008 — Permissões e reparse points | Concluída | Falha isolada e política anticíclo testadas |
-| T009 — Outros perfis e discos locais | Próxima | Execução contínua autorizada |
+| T008 — Permissões e reparse points | Concluída | Commit local `89fa857`; segurança testada |
+| T009 — Outros perfis e discos locais | Concluída | Plano por fases exclui unidades de rede |
+| T010 — Unidades removíveis | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
