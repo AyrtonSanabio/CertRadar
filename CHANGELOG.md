@@ -34,3 +34,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Deduplicação por identidade de volume/arquivo, incluindo hard links e raízes repetidas, mantendo a primeira ocorrência na ordem de descoberta.
 - Primeira interface nativa responsiva com início explícito, pausa, continuação, cancelamento, progresso e lista local de candidatos classificados.
 - Enumeração somente leitura de certificados pessoais do usuário atual, mantendo apenas o certificado público codificado para análises locais posteriores.
+- Leitura opcional do store pessoal da máquina sem solicitar elevação; acesso indisponível retorna código observável em vez de abortar o diagnóstico.

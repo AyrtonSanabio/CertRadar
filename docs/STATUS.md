@@ -19,8 +19,9 @@ Atualizado em 28 de agosto de 2026.
 | T012 — Reconhecimento PFX/P12 | Concluída | Commit local `f6079e3`; inspeção testada |
 | T013 — Deduplicação determinística | Concluída | Commit local `1cc7abe`; hard link testado |
 | T014 — Interface de resultados | Concluída | Commit local `d0a4d0c`; x64/Win32 aprovados |
-| T015 — Store pessoal do usuário | Concluída | Store `Current User\\MY` lido somente leitura |
-| T016 — Store pessoal da máquina | Próxima | Execução contínua autorizada |
+| T015 — Store pessoal do usuário | Concluída | Commit local `d39d3b9`; store lido |
+| T016 — Store pessoal da máquina | Concluída | Tentativa sem elevação e falha representável |
+| T017 — Interpretação X.509 | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
