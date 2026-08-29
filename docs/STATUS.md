@@ -5,8 +5,9 @@ Atualizado em 28 de agosto de 2026.
 | Tarefa | Estado | Evidência |
 |---|---|---|
 | T000 — Especificação e fluxo acompanhado | Concluída | Commit local `2118cc7` |
-| T001 — Estrutura mínima e primeiro teste | Em finalização | Teste aprovado em MSVC 2022 x64 e Win32 |
-| T002 — Contrato versionado de fatos | Próxima | Execução contínua autorizada |
+| T001 — Estrutura mínima e primeiro teste | Concluída | Commit local `4ed8ada`; x64 e Win32 aprovados |
+| T002 — Contrato versionado de fatos | Concluída | 3 testes de contrato aprovados em x64 |
+| T003 — Detector do Windows | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

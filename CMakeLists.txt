@@ -23,6 +23,14 @@ set(DOCTEST_WITH_MAIN_IN_STATIC_LIB OFF CACHE BOOL "" FORCE)
 set(DOCTEST_NO_INSTALL ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(doctest)
 
+FetchContent_Declare(
+    nlohmann_json
+    URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
+    URL_HASH SHA256=42f6e95cad6ec532fd372391373363b62a14af6d771056dbfc86160e6dfff7aa
+)
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+FetchContent_MakeAvailable(nlohmann_json)
+
 function(certradar_enable_strict_warnings target_name)
     if(MSVC)
         target_compile_options(
@@ -38,15 +46,18 @@ function(certradar_enable_strict_warnings target_name)
 endfunction()
 
 add_library(certradar_core STATIC
+    src/facts.cpp
     src/product_info.cpp
 )
 target_include_directories(certradar_core PUBLIC "${PROJECT_SOURCE_DIR}/include")
+target_link_libraries(certradar_core PUBLIC nlohmann_json::nlohmann_json)
 certradar_enable_strict_warnings(certradar_core)
 
 enable_testing()
 
 add_executable(certradar_tests
     tests/test_main.cpp
+    tests/facts_tests.cpp
     tests/product_info_tests.cpp
 )
 target_link_libraries(certradar_tests PRIVATE certradar_core doctest::doctest)

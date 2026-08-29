@@ -17,6 +17,7 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 11. [Estado da implementação](STATUS.md)
 12. [Glossário](GLOSSARIO.md)
 13. [Referências oficiais](REFERENCIAS.md)
+14. [Contrato de fatos](11_CONTRATO_DE_FATOS.md)
 
 ## Regra de alteração
 
