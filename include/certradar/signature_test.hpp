@@ -10,6 +10,9 @@ struct SignatureTestResult {
     std::string message;
 };
 
+enum class ExternalSignaturePermission { blocked, authorized };
+
 SignatureTestResult run_synthetic_a1_signature_test();
+ExternalSignaturePermission external_signature_permission(bool explicit_user_consent) noexcept;
 
 }  // namespace certradar

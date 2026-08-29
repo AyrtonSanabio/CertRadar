@@ -60,4 +60,11 @@ SignatureTestResult run_synthetic_a1_signature_test() {
     return result;
 }
 
+ExternalSignaturePermission external_signature_permission(
+    const bool explicit_user_consent) noexcept {
+    return explicit_user_consent
+        ? ExternalSignaturePermission::authorized
+        : ExternalSignaturePermission::blocked;
+}
+
 }  // namespace certradar

@@ -8,3 +8,10 @@ TEST_CASE("synthetic A1 challenge is signed and verified without persisted crede
     CHECK(result.signed_and_verified);
     CHECK(result.native_status >= 0);
 }
+
+TEST_CASE("external token operation is blocked until explicit consent") {
+    CHECK(certradar::external_signature_permission(false) ==
+          certradar::ExternalSignaturePermission::blocked);
+    CHECK(certradar::external_signature_permission(true) ==
+          certradar::ExternalSignaturePermission::authorized);
+}
