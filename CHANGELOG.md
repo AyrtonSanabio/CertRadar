@@ -31,3 +31,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Unidades removíveis entram somente na fase final; mídias ópticas e caminhos remotos continuam fora do escopo padrão.
 - Progresso incremental, pausa e cancelamento cooperativos, preservando resultados parciais e liberando a busca sem forçar threads.
 - Reconhecimento estrutural PKCS#12 pela CryptoAPI sem pedir senha, com limite padrão de 32 MiB e classificação segura de arquivos inválidos.
+- Deduplicação por identidade de volume/arquivo, incluindo hard links e raízes repetidas, mantendo a primeira ocorrência na ordem de descoberta.

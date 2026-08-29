@@ -154,3 +154,16 @@ TEST_CASE("validated search classifies a malformed candidate instead of executin
     REQUIRE(result.candidates.size() == 1);
     CHECK(result.candidates.front().state == certradar::CandidateState::invalid);
 }
+
+TEST_CASE("search deduplicates hard links and repeated roots while preserving discovery order") {
+    TemporaryDirectory fixture;
+    fixture.create_file("original.pfx");
+    std::filesystem::create_hard_link(
+        fixture.path() / "original.pfx", fixture.path() / "copia.pfx");
+
+    const auto result = certradar::search_files({fixture.path(), fixture.path()});
+
+    REQUIRE(result.candidates.size() == 1);
+    CHECK(result.candidates.front().path.filename() == "copia.pfx");
+    CHECK(result.directories_visited == 1);
+}

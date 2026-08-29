@@ -10,9 +10,37 @@
 #include <deque>
 #include <fstream>
 #include <limits>
+#include <unordered_set>
 #include <vector>
 
 namespace certradar {
+namespace {
+
+std::wstring filesystem_identity(const std::filesystem::path& path, const bool directory) {
+    const DWORD flags = directory ? FILE_FLAG_BACKUP_SEMANTICS : FILE_ATTRIBUTE_NORMAL;
+    const HANDLE handle = CreateFileW(
+        path.c_str(), 0, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        nullptr, OPEN_EXISTING, flags, nullptr);
+    if (handle != INVALID_HANDLE_VALUE) {
+        BY_HANDLE_FILE_INFORMATION information{};
+        if (GetFileInformationByHandle(handle, &information) != FALSE) {
+            CloseHandle(handle);
+            return L"id:" + std::to_wstring(information.dwVolumeSerialNumber) + L":" +
+                   std::to_wstring(information.nFileIndexHigh) + L":" +
+                   std::to_wstring(information.nFileIndexLow);
+        }
+        CloseHandle(handle);
+    }
+
+    std::error_code error;
+    auto canonical = std::filesystem::weakly_canonical(path, error).wstring();
+    std::transform(canonical.begin(), canonical.end(), canonical.begin(), [](const wchar_t value) {
+        return static_cast<wchar_t>(std::towlower(value));
+    });
+    return L"path:" + canonical;
+}
+
+}  // namespace
 
 void SearchControl::request_pause() noexcept { paused_.store(true); }
 
@@ -87,6 +115,8 @@ SearchResult search_files(
     result.status = ScanStatus::running;
 
     std::deque<std::filesystem::path> pending(roots.begin(), roots.end());
+    std::unordered_set<std::wstring> visited_directories;
+    std::unordered_set<std::wstring> visited_files;
     while (!pending.empty()) {
         control.wait_if_paused();
         if (control.is_cancelled()) {
@@ -95,6 +125,7 @@ SearchResult search_files(
         }
         const auto root = pending.front();
         pending.pop_front();
+        if (!visited_directories.insert(filesystem_identity(root, true)).second) continue;
         std::error_code error;
         std::filesystem::directory_iterator iterator(
             root, std::filesystem::directory_options::skip_permission_denied, error);
@@ -141,6 +172,7 @@ SearchResult search_files(
             }
             error.clear();
             if (!entry.is_regular_file(error) || error || !has_a1_extension(entry.path())) continue;
+            if (!visited_files.insert(filesystem_identity(entry.path(), false)).second) continue;
             const auto size = entry.file_size(error);
             CandidateState state = CandidateState::extension_match;
             if (options.validate_containers) {
