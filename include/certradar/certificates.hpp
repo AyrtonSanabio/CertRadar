@@ -31,5 +31,9 @@ struct CertificateStoreResult {
 };
 
 CertificateStoreResult enumerate_personal_certificates(StoreScope scope);
+CertificateValidity classify_certificate_validity(
+    std::uint64_t valid_from,
+    std::uint64_t valid_until,
+    std::uint64_t now) noexcept;
 
 }  // namespace certradar

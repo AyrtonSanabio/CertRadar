@@ -35,3 +35,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Primeira interface nativa responsiva com início explícito, pausa, continuação, cancelamento, progresso e lista local de candidatos classificados.
 - Enumeração somente leitura de certificados pessoais do usuário atual, mantendo apenas o certificado público codificado para análises locais posteriores.
 - Leitura opcional do store pessoal da máquina sem solicitar elevação; acesso indisponível retorna código observável em vez de abortar o diagnóstico.
+- Interpretação X.509 de titular, emissor, série, impressão digital, período UTC, validade e usos estendidos, com alerta de vencimento em 30 dias.

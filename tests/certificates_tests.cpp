@@ -23,3 +23,17 @@ TEST_CASE("local machine personal store is attempted without elevation") {
         CHECK(certificate.scope == certradar::StoreScope::local_machine);
     }
 }
+
+TEST_CASE("certificate validity distinguishes future near expiry and expired") {
+    constexpr std::uint64_t day = 24ULL * 60ULL * 60ULL * 10'000'000ULL;
+    constexpr std::uint64_t now = 1'000ULL * day;
+
+    CHECK(certradar::classify_certificate_validity(now + day, now + 365 * day, now) ==
+          certradar::CertificateValidity::not_yet_valid);
+    CHECK(certradar::classify_certificate_validity(now - day, now + 365 * day, now) ==
+          certradar::CertificateValidity::valid);
+    CHECK(certradar::classify_certificate_validity(now - day, now + 20 * day, now) ==
+          certradar::CertificateValidity::expiring_soon);
+    CHECK(certradar::classify_certificate_validity(now - 365 * day, now - day, now) ==
+          certradar::CertificateValidity::expired);
+}

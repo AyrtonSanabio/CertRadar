@@ -6,6 +6,10 @@
 #include <wincrypt.h>
 
 #include <string>
+#include <cstdio>
+#include <iomanip>
+#include <sstream>
+#include <vector>
 
 namespace certradar {
 namespace {
@@ -33,7 +37,69 @@ std::string certificate_name(PCCERT_CONTEXT context, const DWORD flags) {
     return utf8(value);
 }
 
+std::uint64_t filetime_value(const FILETIME& value) noexcept {
+    ULARGE_INTEGER integer{};
+    integer.LowPart = value.dwLowDateTime;
+    integer.HighPart = value.dwHighDateTime;
+    return integer.QuadPart;
+}
+
+std::string format_filetime(const FILETIME& value) {
+    SYSTEMTIME system{};
+    if (FileTimeToSystemTime(&value, &system) == FALSE) return {};
+    char output[32]{};
+    const int written = std::snprintf(
+        output, sizeof(output), "%04u-%02u-%02uT%02u:%02u:%02uZ",
+        system.wYear, system.wMonth, system.wDay,
+        system.wHour, system.wMinute, system.wSecond);
+    return written > 0 ? std::string(output) : std::string{};
+}
+
+std::string hexadecimal(const BYTE* bytes, const DWORD count, const bool reverse) {
+    std::ostringstream output;
+    output << std::uppercase << std::hex << std::setfill('0');
+    for (DWORD index = 0; index < count; ++index) {
+        const DWORD position = reverse ? count - index - 1U : index;
+        output << std::setw(2) << static_cast<unsigned int>(bytes[position]);
+    }
+    return output.str();
+}
+
+std::string certificate_hash(PCCERT_CONTEXT context) {
+    DWORD size = 0;
+    if (CertGetCertificateContextProperty(context, CERT_HASH_PROP_ID, nullptr, &size) == FALSE) return {};
+    std::vector<BYTE> hash(size);
+    if (CertGetCertificateContextProperty(context, CERT_HASH_PROP_ID, hash.data(), &size) == FALSE) return {};
+    return hexadecimal(hash.data(), size, false);
+}
+
+std::vector<std::string> enhanced_usages(PCCERT_CONTEXT context) {
+    DWORD size = 0;
+    if (CertGetEnhancedKeyUsage(context, 0, nullptr, &size) == FALSE || size == 0) return {};
+    std::vector<BYTE> buffer(size);
+    auto* const usage = reinterpret_cast<PCERT_ENHKEY_USAGE>(buffer.data());
+    if (CertGetEnhancedKeyUsage(context, 0, usage, &size) == FALSE) return {};
+    std::vector<std::string> result;
+    for (DWORD index = 0; index < usage->cUsageIdentifier; ++index) {
+        if (usage->rgpszUsageIdentifier[index] != nullptr) {
+            result.emplace_back(usage->rgpszUsageIdentifier[index]);
+        }
+    }
+    return result;
+}
+
 }  // namespace
+
+CertificateValidity classify_certificate_validity(
+    const std::uint64_t valid_from,
+    const std::uint64_t valid_until,
+    const std::uint64_t now) noexcept {
+    constexpr std::uint64_t thirty_days = 30ULL * 24ULL * 60ULL * 60ULL * 10'000'000ULL;
+    if (now < valid_from) return CertificateValidity::not_yet_valid;
+    if (now > valid_until) return CertificateValidity::expired;
+    if (valid_until - now <= thirty_days) return CertificateValidity::expiring_soon;
+    return CertificateValidity::valid;
+}
 
 CertificateStoreResult enumerate_personal_certificates(const StoreScope scope) {
     CertificateStoreResult result;
@@ -55,6 +121,20 @@ CertificateStoreResult enumerate_personal_certificates(const StoreScope scope) {
         record.scope = scope;
         record.subject = certificate_name(context, 0);
         record.issuer = certificate_name(context, CERT_NAME_ISSUER_FLAG);
+        record.serial_number = hexadecimal(
+            context->pCertInfo->SerialNumber.pbData,
+            context->pCertInfo->SerialNumber.cbData,
+            true);
+        record.thumbprint = certificate_hash(context);
+        record.valid_from = format_filetime(context->pCertInfo->NotBefore);
+        record.valid_until = format_filetime(context->pCertInfo->NotAfter);
+        FILETIME now{};
+        GetSystemTimeAsFileTime(&now);
+        record.validity = classify_certificate_validity(
+            filetime_value(context->pCertInfo->NotBefore),
+            filetime_value(context->pCertInfo->NotAfter),
+            filetime_value(now));
+        record.enhanced_key_usages = enhanced_usages(context);
         record.encoded_certificate.assign(
             context->pbCertEncoded, context->pbCertEncoded + context->cbCertEncoded);
         result.certificates.push_back(std::move(record));
