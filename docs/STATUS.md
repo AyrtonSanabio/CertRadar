@@ -31,7 +31,11 @@ Atualizado em 28 de agosto de 2026.
 | T024 — Estados separados de A3 | Concluída | Commit local `2b2adf7`; estados testados |
 | T025 — Assinatura sintética A1 | Concluída | Commit local `76e16a3`; RSA efêmero aprovado |
 | T026 — Assinatura A3 autorizada | Parcial, aguardando hardware | Barreira de consentimento testada; assinatura real exige A3 |
-| T027 — Motor de diagnóstico | Próxima | Independente da validação física da T026 |
+| T027 — Motor de diagnóstico | Concluída | Regras puras produzem conclusões testáveis |
+| T028 — Fato, causa, confiança e ação | Concluída | Estrutura explicável coberta por testes |
+| T029 — Relatório local mascarado | Concluída | JSON local-only e mascaramento testados |
+| T030 — Resumo para chamado | Concluída | Texto copiável com próxima ação |
+| T031 — Executor allowlist | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

@@ -47,12 +47,14 @@ endfunction()
 
 add_library(certradar_core STATIC
     src/certificates.cpp
+    src/diagnosis.cpp
     src/facts.cpp
     src/known_folders.cpp
     src/platform.cpp
     src/product_info.cpp
     src/search.cpp
     src/search_plan.cpp
+    src/report.cpp
     src/signature_test.cpp
     src/smartcard.cpp
     src/ui_model.cpp
@@ -67,11 +69,13 @@ add_executable(certradar_tests
     tests/test_main.cpp
     tests/facts_tests.cpp
     tests/certificates_tests.cpp
+    tests/diagnosis_tests.cpp
     tests/known_folders_tests.cpp
     tests/platform_tests.cpp
     tests/product_info_tests.cpp
     tests/search_tests.cpp
     tests/search_plan_tests.cpp
+    tests/report_tests.cpp
     tests/signature_test_tests.cpp
     tests/smartcard_tests.cpp
     tests/ui_model_tests.cpp

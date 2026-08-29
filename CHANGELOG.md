@@ -45,3 +45,5 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Máquina de estados A3 separando serviço, leitor, dispositivo, middleware e associação de chave, evitando diagnósticos genéricos de “token não funciona”.
 - Prova funcional sintética com chave RSA efêmera, desafio aleatório, assinatura e verificação locais; buffers sensíveis são zerados e nada é persistido.
 - Barreira testável de consentimento para operações com token externo; a prova de assinatura A3 permanece pendente até existir hardware/middleware de laboratório.
+- Motor de diagnóstico puro com conclusões explicáveis por fato, causa provável, confiança e ação, incluindo resposta de evidência insuficiente.
+- Relatório JSON local e resumo copiável para chamado, com mascaramento de identificadores e caminhos e declaração explícita de ausência de chave privada.
