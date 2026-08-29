@@ -30,10 +30,30 @@ struct CertificateStoreResult {
     std::vector<CertificateRecord> certificates;
 };
 
+enum class ChainIssue {
+    untrusted_root,
+    partial_chain,
+    expired,
+    revoked,
+    revocation_unknown,
+    invalid_basic_constraints,
+    other
+};
+
+struct ChainEvaluation {
+    bool built{false};
+    bool online_requested{false};
+    unsigned long trust_status{0};
+    unsigned long error_code{0};
+    std::vector<ChainIssue> issues;
+};
+
 CertificateStoreResult enumerate_personal_certificates(StoreScope scope);
 CertificateValidity classify_certificate_validity(
     std::uint64_t valid_from,
     std::uint64_t valid_until,
     std::uint64_t now) noexcept;
+std::vector<ChainIssue> classify_chain_issues(unsigned long trust_status);
+ChainEvaluation evaluate_certificate_chain_local(const std::vector<std::uint8_t>& encoded_certificate);
 
 }  // namespace certradar

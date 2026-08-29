@@ -50,3 +50,24 @@ TEST_CASE("private key association is metadata only and never contains key mater
     }
     CHECK(result.opened);
 }
+
+TEST_CASE("chain status maps trust failures to explainable local issues") {
+    constexpr unsigned long not_time_valid = 0x00000001;
+    constexpr unsigned long untrusted_root = 0x00000020;
+    constexpr unsigned long partial_chain = 0x00010000;
+
+    const auto issues = certradar::classify_chain_issues(
+        not_time_valid | untrusted_root | partial_chain);
+
+    REQUIRE(issues.size() == 3);
+    CHECK(issues[0] == certradar::ChainIssue::expired);
+    CHECK(issues[1] == certradar::ChainIssue::untrusted_root);
+    CHECK(issues[2] == certradar::ChainIssue::partial_chain);
+}
+
+TEST_CASE("invalid public certificate data produces a contained chain error") {
+    const auto result = certradar::evaluate_certificate_chain_local({1, 2, 3, 4});
+    CHECK_FALSE(result.built);
+    CHECK(result.error_code != 0);
+    CHECK_FALSE(result.online_requested);
+}

@@ -117,6 +117,61 @@ CertificateValidity classify_certificate_validity(
     return CertificateValidity::valid;
 }
 
+std::vector<ChainIssue> classify_chain_issues(const unsigned long trust_status) {
+    std::vector<ChainIssue> issues;
+    unsigned long recognized = 0;
+    const auto add = [&](const unsigned long flag, const ChainIssue issue) {
+        if ((trust_status & flag) != 0) {
+            issues.push_back(issue);
+            recognized |= flag;
+        }
+    };
+    add(CERT_TRUST_IS_NOT_TIME_VALID, ChainIssue::expired);
+    add(CERT_TRUST_IS_UNTRUSTED_ROOT, ChainIssue::untrusted_root);
+    add(CERT_TRUST_IS_PARTIAL_CHAIN, ChainIssue::partial_chain);
+    add(CERT_TRUST_IS_REVOKED, ChainIssue::revoked);
+    add(CERT_TRUST_REVOCATION_STATUS_UNKNOWN, ChainIssue::revocation_unknown);
+    add(CERT_TRUST_IS_OFFLINE_REVOCATION, ChainIssue::revocation_unknown);
+    add(CERT_TRUST_INVALID_BASIC_CONSTRAINTS, ChainIssue::invalid_basic_constraints);
+    if ((trust_status & ~recognized) != 0) issues.push_back(ChainIssue::other);
+    return issues;
+}
+
+ChainEvaluation evaluate_certificate_chain_local(
+    const std::vector<std::uint8_t>& encoded_certificate) {
+    ChainEvaluation result;
+    if (encoded_certificate.empty()) {
+        result.error_code = ERROR_INVALID_DATA;
+        return result;
+    }
+    PCCERT_CONTEXT context = CertCreateCertificateContext(
+        X509_ASN_ENCODING | PKCS_7_ASN_ENCODING,
+        encoded_certificate.data(), static_cast<DWORD>(encoded_certificate.size()));
+    if (context == nullptr) {
+        result.error_code = GetLastError();
+        if (result.error_code == 0) result.error_code = ERROR_INVALID_DATA;
+        return result;
+    }
+
+    CERT_CHAIN_PARA parameters{};
+    parameters.cbSize = sizeof(parameters);
+    PCCERT_CHAIN_CONTEXT chain = nullptr;
+    if (CertGetCertificateChain(
+            nullptr, context, nullptr, nullptr, &parameters,
+            CERT_CHAIN_CACHE_ONLY_URL_RETRIEVAL, nullptr, &chain) == FALSE) {
+        result.error_code = GetLastError();
+        CertFreeCertificateContext(context);
+        return result;
+    }
+
+    result.built = true;
+    result.trust_status = chain->TrustStatus.dwErrorStatus;
+    result.issues = classify_chain_issues(result.trust_status);
+    CertFreeCertificateChain(chain);
+    CertFreeCertificateContext(context);
+    return result;
+}
+
 CertificateStoreResult enumerate_personal_certificates(const StoreScope scope) {
     CertificateStoreResult result;
     const DWORD location = scope == StoreScope::current_user
