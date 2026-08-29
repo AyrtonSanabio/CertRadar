@@ -47,6 +47,7 @@ endfunction()
 
 add_library(certradar_core STATIC
     src/facts.cpp
+    src/known_folders.cpp
     src/platform.cpp
     src/product_info.cpp
 )
@@ -59,11 +60,12 @@ enable_testing()
 add_executable(certradar_tests
     tests/test_main.cpp
     tests/facts_tests.cpp
+    tests/known_folders_tests.cpp
     tests/platform_tests.cpp
     tests/product_info_tests.cpp
 )
 if(WIN32)
-    target_link_libraries(certradar_core PRIVATE advapi32)
+    target_link_libraries(certradar_core PRIVATE advapi32 ole32 shell32)
 endif()
 target_link_libraries(certradar_tests PRIVATE certradar_core doctest::doctest)
 certradar_enable_strict_warnings(certradar_tests)

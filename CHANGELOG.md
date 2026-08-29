@@ -23,3 +23,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Contrato de fatos JSON versão 1 com round trip, rejeição de versões incompatíveis e dependência nlohmann/json verificada por SHA-256.
 - Detector nativo de versão real do Windows, arquitetura do sistema, edição, service pack e estado de elevação, sem solicitar privilégios.
 - Classificador puro da matriz de suporte para Windows 10/11, 7 SP1, 8.1 e XP SP3, com recusa explícita das versões fora do escopo.
+- Resolução de Downloads, Área de Trabalho e Documentos pela Known Folders API, preservando a ordem de busca do suporte.
