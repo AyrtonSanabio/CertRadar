@@ -35,7 +35,8 @@ Atualizado em 28 de agosto de 2026.
 | T028 — Fato, causa, confiança e ação | Concluída | Estrutura explicável coberta por testes |
 | T029 — Relatório local mascarado | Concluída | JSON local-only e mascaramento testados |
 | T030 — Resumo para chamado | Concluída | Texto copiável com próxima ação |
-| T031 — Executor allowlist | Próxima | Execução contínua autorizada |
+| T031 — Executor allowlist | Concluída | IDs compilados recusam texto arbitrário e exigem consentimento |
+| T032 — Ação segura no serviço | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

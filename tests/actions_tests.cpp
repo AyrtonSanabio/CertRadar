@@ -1,0 +1,22 @@
+#include "certradar/actions.hpp"
+
+#include <doctest/doctest.h>
+
+TEST_CASE("executor policy refuses unknown actions and missing consent") {
+    CHECK(certradar::authorize_action("cmd /c qualquer-coisa", true) ==
+          certradar::ActionAuthorization::unknown_action);
+    CHECK(certradar::authorize_action("smartcard_service_start", false) ==
+          certradar::ActionAuthorization::consent_required);
+    CHECK(certradar::authorize_action("smartcard_service_start", true) ==
+          certradar::ActionAuthorization::allowed);
+}
+
+TEST_CASE("every allowed action has a stable id and consent description") {
+    const auto& actions = certradar::allowed_actions();
+    REQUIRE(actions.size() == 3);
+    for (const auto& action : actions) {
+        CHECK_FALSE(action.id.empty());
+        CHECK_FALSE(action.consent_description.empty());
+        CHECK(action.id.find(' ') == std::string::npos);
+    }
+}
