@@ -8,6 +8,7 @@ namespace certradar {
 
 enum class StoreScope { current_user, local_machine };
 enum class CertificateValidity { not_yet_valid, valid, expiring_soon, expired };
+enum class ProviderKind { csp, ksp, unknown };
 
 struct CertificateRecord {
     StoreScope scope{StoreScope::current_user};
@@ -20,6 +21,7 @@ struct CertificateRecord {
     CertificateValidity validity{CertificateValidity::valid};
     bool has_private_key_association{false};
     std::string provider;
+    ProviderKind provider_kind{ProviderKind::unknown};
     std::vector<std::string> enhanced_key_usages;
     std::vector<std::uint8_t> encoded_certificate;
 };
@@ -59,5 +61,6 @@ ChainEvaluation evaluate_certificate_chain_local(const std::vector<std::uint8_t>
 ChainEvaluation evaluate_certificate_chain_online(
     const std::vector<std::uint8_t>& encoded_certificate,
     std::uint32_t timeout_ms = 5000);
+ProviderKind classify_provider_kind(unsigned long provider_type, const std::string& provider_name) noexcept;
 
 }  // namespace certradar

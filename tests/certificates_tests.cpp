@@ -79,3 +79,9 @@ TEST_CASE("online revocation request preserves timeout and remains indeterminate
     CHECK(result.requested_timeout_ms == 750);
     CHECK(result.error_code != 0);
 }
+
+TEST_CASE("provider metadata distinguishes legacy CSP from modern KSP") {
+    CHECK(certradar::classify_provider_kind(1, "Legacy Provider") == certradar::ProviderKind::csp);
+    CHECK(certradar::classify_provider_kind(0, "Key Storage Provider") == certradar::ProviderKind::ksp);
+    CHECK(certradar::classify_provider_kind(0, "") == certradar::ProviderKind::unknown);
+}

@@ -103,6 +103,7 @@ void read_private_key_association(PCCERT_CONTEXT context, CertificateRecord& rec
     const auto* const information = reinterpret_cast<const CRYPT_KEY_PROV_INFO*>(buffer.data());
     record.has_private_key_association = true;
     if (information->pwszProvName != nullptr) record.provider = utf8(information->pwszProvName);
+    record.provider_kind = classify_provider_kind(information->dwProvType, record.provider);
 }
 
 }  // namespace
@@ -116,6 +117,13 @@ CertificateValidity classify_certificate_validity(
     if (now > valid_until) return CertificateValidity::expired;
     if (valid_until - now <= thirty_days) return CertificateValidity::expiring_soon;
     return CertificateValidity::valid;
+}
+
+ProviderKind classify_provider_kind(
+    const unsigned long provider_type,
+    const std::string& provider_name) noexcept {
+    if (provider_name.empty()) return ProviderKind::unknown;
+    return provider_type == 0 ? ProviderKind::ksp : ProviderKind::csp;
 }
 
 std::vector<ChainIssue> classify_chain_issues(const unsigned long trust_status) {

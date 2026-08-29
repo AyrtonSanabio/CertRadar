@@ -26,8 +26,9 @@ Atualizado em 28 de agosto de 2026.
 | T019 — Cadeia local | Concluída | Commit local `909d2d3`; erros classificados |
 | T020 — Revogação online | Concluída | Commit local `a176469`; timeout testado |
 | T021 — Serviço de cartão inteligente | Concluída | Commit local `fccdb74`; estado testado |
-| T022 — Leitores e cartões | Concluída | WinSCard enumera presença sem transação/PIN |
-| T023 — Provider e middleware | Próxima | Execução contínua autorizada |
+| T022 — Leitores e cartões | Concluída | Commit local `281fd03`; WinSCard testado |
+| T023 — Provider e middleware | Concluída | Nome do provider e CSP/KSP classificados |
+| T024 — Estados separados de A3 | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
