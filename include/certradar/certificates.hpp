@@ -45,6 +45,7 @@ struct ChainEvaluation {
     bool online_requested{false};
     unsigned long trust_status{0};
     unsigned long error_code{0};
+    std::uint32_t requested_timeout_ms{0};
     std::vector<ChainIssue> issues;
 };
 
@@ -55,5 +56,8 @@ CertificateValidity classify_certificate_validity(
     std::uint64_t now) noexcept;
 std::vector<ChainIssue> classify_chain_issues(unsigned long trust_status);
 ChainEvaluation evaluate_certificate_chain_local(const std::vector<std::uint8_t>& encoded_certificate);
+ChainEvaluation evaluate_certificate_chain_online(
+    const std::vector<std::uint8_t>& encoded_certificate,
+    std::uint32_t timeout_ms = 5000);
 
 }  // namespace certradar

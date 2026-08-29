@@ -71,3 +71,11 @@ TEST_CASE("invalid public certificate data produces a contained chain error") {
     CHECK(result.error_code != 0);
     CHECK_FALSE(result.online_requested);
 }
+
+TEST_CASE("online revocation request preserves timeout and remains indeterminate on bad input") {
+    const auto result = certradar::evaluate_certificate_chain_online({1, 2, 3}, 750);
+    CHECK_FALSE(result.built);
+    CHECK(result.online_requested);
+    CHECK(result.requested_timeout_ms == 750);
+    CHECK(result.error_code != 0);
+}

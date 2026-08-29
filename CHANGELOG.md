@@ -38,3 +38,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Interpretação X.509 de titular, emissor, série, impressão digital, período UTC, validade e usos estendidos, com alerta de vencimento em 30 dias.
 - Detecção aparente de chave privada pela propriedade de provider do certificado, sem abrir container, exportar chave ou provocar PIN.
 - Construção de cadeia usando apenas cache local e explicação separada de validade, raiz não confiável, cadeia parcial, revogação e restrições.
+- Validação online opcional com timeout explícito, checagem de revogação da cadeia sem raiz e distinção entre revogado e consulta indeterminada.

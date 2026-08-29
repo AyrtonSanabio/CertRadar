@@ -2,6 +2,7 @@
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
+#define CERT_CHAIN_PARA_HAS_EXTRA_FIELDS
 #include <windows.h>
 #include <wincrypt.h>
 
@@ -137,9 +138,15 @@ std::vector<ChainIssue> classify_chain_issues(const unsigned long trust_status) 
     return issues;
 }
 
-ChainEvaluation evaluate_certificate_chain_local(
-    const std::vector<std::uint8_t>& encoded_certificate) {
+namespace {
+
+ChainEvaluation evaluate_chain(
+    const std::vector<std::uint8_t>& encoded_certificate,
+    const bool online,
+    const std::uint32_t timeout_ms) {
     ChainEvaluation result;
+    result.online_requested = online;
+    result.requested_timeout_ms = online ? timeout_ms : 0;
     if (encoded_certificate.empty()) {
         result.error_code = ERROR_INVALID_DATA;
         return result;
@@ -155,10 +162,14 @@ ChainEvaluation evaluate_certificate_chain_local(
 
     CERT_CHAIN_PARA parameters{};
     parameters.cbSize = sizeof(parameters);
+    parameters.dwUrlRetrievalTimeout = online ? timeout_ms : 0;
     PCCERT_CHAIN_CONTEXT chain = nullptr;
+    const DWORD flags = online
+        ? CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT
+        : CERT_CHAIN_CACHE_ONLY_URL_RETRIEVAL;
     if (CertGetCertificateChain(
             nullptr, context, nullptr, nullptr, &parameters,
-            CERT_CHAIN_CACHE_ONLY_URL_RETRIEVAL, nullptr, &chain) == FALSE) {
+            flags, nullptr, &chain) == FALSE) {
         result.error_code = GetLastError();
         CertFreeCertificateContext(context);
         return result;
@@ -170,6 +181,19 @@ ChainEvaluation evaluate_certificate_chain_local(
     CertFreeCertificateChain(chain);
     CertFreeCertificateContext(context);
     return result;
+}
+
+}  // namespace
+
+ChainEvaluation evaluate_certificate_chain_local(
+    const std::vector<std::uint8_t>& encoded_certificate) {
+    return evaluate_chain(encoded_certificate, false, 0);
+}
+
+ChainEvaluation evaluate_certificate_chain_online(
+    const std::vector<std::uint8_t>& encoded_certificate,
+    const std::uint32_t timeout_ms) {
+    return evaluate_chain(encoded_certificate, true, timeout_ms == 0 ? 1 : timeout_ms);
 }
 
 CertificateStoreResult enumerate_personal_certificates(const StoreScope scope) {
