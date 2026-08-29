@@ -52,6 +52,7 @@ add_library(certradar_core STATIC
     src/product_info.cpp
     src/search.cpp
     src/search_plan.cpp
+    src/ui_model.cpp
 )
 target_include_directories(certradar_core PUBLIC "${PROJECT_SOURCE_DIR}/include")
 target_link_libraries(certradar_core PUBLIC nlohmann_json::nlohmann_json)
@@ -67,6 +68,7 @@ add_executable(certradar_tests
     tests/product_info_tests.cpp
     tests/search_tests.cpp
     tests/search_plan_tests.cpp
+    tests/ui_model_tests.cpp
 )
 if(WIN32)
     target_link_libraries(certradar_core PRIVATE advapi32 crypt32 ole32 shell32)
@@ -76,3 +78,7 @@ certradar_enable_strict_warnings(certradar_tests)
 
 include("${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake")
 doctest_discover_tests(certradar_tests)
+
+add_executable(certradar WIN32 src/app/main.cpp)
+target_link_libraries(certradar PRIVATE certradar_core comctl32)
+certradar_enable_strict_warnings(certradar)

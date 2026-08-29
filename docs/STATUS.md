@@ -17,8 +17,9 @@ Atualizado em 28 de agosto de 2026.
 | T010 — Unidades removíveis | Concluída | Commit local `3a8ea57`; fase final testada |
 | T011 — Progresso, pausa e cancelamento | Concluída | Commit local `0bcb5b8`; controles testados |
 | T012 — Reconhecimento PFX/P12 | Concluída | Commit local `f6079e3`; inspeção testada |
-| T013 — Deduplicação determinística | Concluída | Identidade NTFS e ordem testadas com hard link |
-| T014 — Interface de resultados | Próxima | Execução contínua autorizada |
+| T013 — Deduplicação determinística | Concluída | Commit local `1cc7abe`; hard link testado |
+| T014 — Interface de resultados | Concluída | Executáveis x64/Win32 e modelo visual testados |
+| T015 — Store pessoal do usuário | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

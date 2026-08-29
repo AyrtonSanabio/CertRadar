@@ -104,7 +104,8 @@ A arquitetura candidata separa um coletor nativo, restrito e majoritariamente de
 
 ## Execução
 
-Ainda não existe versão executável do produto. O checkpoint T001 contém apenas o núcleo mínimo e seu primeiro teste automatizado.
+Ainda não existe versão distribuível ou assinada do produto. O checkpoint T001 contém o núcleo mínimo e seu primeiro teste automatizado.
+Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela somente inicia a busca após o usuário pressionar **Iniciar busca**. Os binários dessa pasta ainda não constituem uma release assinada.
 
 ### Executar os testes do checkpoint atual
 
