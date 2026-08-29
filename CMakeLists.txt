@@ -46,6 +46,7 @@ function(certradar_enable_strict_warnings target_name)
 endfunction()
 
 add_library(certradar_core STATIC
+    src/certificates.cpp
     src/facts.cpp
     src/known_folders.cpp
     src/platform.cpp
@@ -63,6 +64,7 @@ enable_testing()
 add_executable(certradar_tests
     tests/test_main.cpp
     tests/facts_tests.cpp
+    tests/certificates_tests.cpp
     tests/known_folders_tests.cpp
     tests/platform_tests.cpp
     tests/product_info_tests.cpp
