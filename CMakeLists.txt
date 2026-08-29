@@ -50,6 +50,7 @@ add_library(certradar_core STATIC
     src/known_folders.cpp
     src/platform.cpp
     src/product_info.cpp
+    src/search.cpp
 )
 target_include_directories(certradar_core PUBLIC "${PROJECT_SOURCE_DIR}/include")
 target_link_libraries(certradar_core PUBLIC nlohmann_json::nlohmann_json)
@@ -63,6 +64,7 @@ add_executable(certradar_tests
     tests/known_folders_tests.cpp
     tests/platform_tests.cpp
     tests/product_info_tests.cpp
+    tests/search_tests.cpp
 )
 if(WIN32)
     target_link_libraries(certradar_core PRIVATE advapi32 ole32 shell32)

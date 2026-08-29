@@ -9,8 +9,9 @@ Atualizado em 28 de agosto de 2026.
 | T002 — Contrato versionado de fatos | Concluída | Commit local `5566467`; 3 testes aprovados |
 | T003 — Detector do Windows | Concluída | Commit local `9ea08b9`; x64 e Win32 aprovados |
 | T004 — Classificador de suporte | Concluída | Commit local `1eb2c16`; matriz testada |
-| T005 — Pastas prioritárias | Concluída | Known Folders e ordem testadas no Windows |
-| T006 — Busca prioritária PFX/P12 | Próxima | Execução contínua autorizada |
+| T005 — Pastas prioritárias | Concluída | Commit local `902ffad`; Known Folders testadas |
+| T006 — Busca prioritária PFX/P12 | Concluída | Extensões e busca direta testadas |
+| T007 — Busca iterativa no perfil | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
