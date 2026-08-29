@@ -18,3 +18,5 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Fluxo de suporte, roadmap, glossário e referências oficiais.
 - Política inicial de segurança e guia de contribuição.
 - Fluxo acompanhado com checkpoints T000–T043, relatório padronizado de conclusão, pausa para estudo e aprovação obrigatória antes de avançar.
+- Estrutura mínima em C++17 para a T001, com identidade pública do núcleo, testes doctest e scripts CMake/PowerShell validados em x64 e Win32.
+- Modo contínuo autorizado pelo proprietário: checkpoints, testes, documentação e commits locais permanecem obrigatórios, mas as pausas entre tarefas foram suspensas.

@@ -10,6 +10,17 @@ Neste projeto, “checkpoint” é o equivalente ao endpoint de aprendizado cita
 
 > Uma tarefa por vez. Depois de finalizar, o Codex para. A próxima tarefa somente começa após aprovação explícita do proprietário.
 
+### Exceção ativa: execução contínua
+
+Em 28 de agosto de 2026, o proprietário autorizou explicitamente a execução contínua de tudo que está documentado. Durante esta execução:
+
+- as pausas para estudo e as aprovações intermediárias ficam suspensas;
+- a ordem dos checkpoints, o ciclo TDD e as revisões de segurança continuam obrigatórios;
+- cada marco deve continuar rastreável por testes, documentação e commits locais;
+- nenhuma alteração será enviada ao GitHub sem uma solicitação explícita de `push`.
+
+Ao término, o proprietário poderá estudar o histórico completo tarefa por tarefa.
+
 Não será permitido:
 
 - juntar duas funcionalidades apenas porque são próximas;

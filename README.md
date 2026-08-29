@@ -91,6 +91,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Roadmap](docs/08_ROADMAP.md)
 - [Decisões e dúvidas para revisão](docs/09_DECISOES_PARA_REVISAO.md)
 - [Fluxo de implementação acompanhada](docs/10_FLUXO_DE_IMPLEMENTACAO_ACOMPANHADA.md)
+- [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)
 - [Como contribuir](CONTRIBUTING.md)
@@ -103,7 +104,16 @@ A arquitetura candidata separa um coletor nativo, restrito e majoritariamente de
 
 ## Execução
 
-Ainda não existe versão executável. Nenhuma instrução de instalação será publicada antes da conclusão do primeiro marco técnico e da validação de segurança.
+Ainda não existe versão executável do produto. O checkpoint T001 contém apenas o núcleo mínimo e seu primeiro teste automatizado.
+
+### Executar os testes do checkpoint atual
+
+```powershell
+& '.\scripts\test.ps1' -Architecture x64 -Configuration Debug
+& '.\scripts\test.ps1' -Architecture Win32 -Configuration Debug
+```
+
+A base moderna usa CMake e Visual Studio Build Tools 2022. O build legado para Windows XP será mantido isolado porque exige uma toolchain antiga e um conjunto reduzido de funcionalidades.
 
 ## Licença
 

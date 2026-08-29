@@ -4,7 +4,7 @@ O roadmap é organizado por evidência, não por prazo. Um marco somente termina
 
 ## M0 — Especificação e revisão
 
-Estado: **em revisão**.
+Estado: **concluído e registrado no commit local `2118cc7`**.
 
 Entregas:
 
