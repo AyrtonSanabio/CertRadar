@@ -75,6 +75,11 @@ std::vector<SearchRoot> compose_search_plan(
             plan.push_back({drive.root, SearchPhase::fixed_drives});
         }
     }
+    for (const auto& drive : drives) {
+        if (drive.type == DRIVE_REMOVABLE && !drive.root.empty()) {
+            plan.push_back({drive.root, SearchPhase::removable_drives});
+        }
+    }
     return plan;
 }
 

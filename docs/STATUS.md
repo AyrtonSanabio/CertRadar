@@ -13,8 +13,9 @@ Atualizado em 28 de agosto de 2026.
 | T006 — Busca prioritária PFX/P12 | Concluída | Commit local `eed678b`; extensões testadas |
 | T007 — Busca iterativa no perfil | Concluída | Commit local `9cf82aa`; fila testada |
 | T008 — Permissões e reparse points | Concluída | Commit local `89fa857`; segurança testada |
-| T009 — Outros perfis e discos locais | Concluída | Plano por fases exclui unidades de rede |
-| T010 — Unidades removíveis | Próxima | Execução contínua autorizada |
+| T009 — Outros perfis e discos locais | Concluída | Commit local `43eaa32`; rede excluída |
+| T010 — Unidades removíveis | Concluída | Removíveis entram por último; falhas ficam isoladas |
+| T011 — Progresso, pausa e cancelamento | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 

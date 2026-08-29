@@ -20,3 +20,18 @@ TEST_CASE("search plan puts profiles before fixed drives and excludes network dr
     CHECK(plan[6].path == std::filesystem::path("C:/"));
     CHECK(plan[6].phase == certradar::SearchPhase::fixed_drives);
 }
+
+TEST_CASE("search plan appends removable drives but still excludes optical and remote media") {
+    constexpr unsigned int drive_removable = 2;
+    constexpr unsigned int drive_remote = 4;
+    constexpr unsigned int drive_cdrom = 5;
+    const certradar::PriorityFolders priority{"P:/D", "P:/A", "P:/Docs"};
+    const std::vector<certradar::WindowsDrive> drives{
+        {"E:/", drive_removable}, {"Z:/", drive_remote}, {"F:/", drive_cdrom}};
+
+    const auto plan = certradar::compose_search_plan(priority, {}, {}, drives);
+
+    REQUIRE(plan.size() == 4);
+    CHECK(plan.back().path == std::filesystem::path("E:/"));
+    CHECK(plan.back().phase == certradar::SearchPhase::removable_drives);
+}
