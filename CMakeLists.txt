@@ -78,6 +78,7 @@ add_executable(certradar_tests
     tests/diagnosis_tests.cpp
     tests/known_folders_tests.cpp
     tests/platform_tests.cpp
+    tests/privacy_audit_tests.cpp
     tests/product_info_tests.cpp
     tests/search_tests.cpp
     tests/search_plan_tests.cpp

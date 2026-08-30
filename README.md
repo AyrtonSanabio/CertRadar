@@ -97,6 +97,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Matriz de compatibilidade e evidências de VM](docs/14_MATRIZ_COMPATIBILIDADE.md)
 - [Modo legado Windows XP SP3](docs/15_MODO_LEGADO_XP.md)
 - [Hardening e análise estática](docs/16_HARDENING.md)
+- [Auditoria de privacidade](docs/17_AUDITORIA_DE_PRIVACIDADE.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)

@@ -46,7 +46,8 @@ Atualizado em 30 de agosto de 2026.
 | T039 — Modo compatível Windows 7 SP1/8.1 | Aguardando VMs | Coletor pronto, sem evidência de runtime nesses sistemas |
 | T040 — Modo legado básico Windows XP SP3 | Parcial, aguardando VM | PE32/subsistema 5.01 e busca básica aprovados no host; runtime XP não comprovado |
 | T041 — Fuzzing e análise estática | Concluída | 10.500 mutações determinísticas, 56 testes x64/Win32 e clang-tidy em 16 fontes |
-| T042 — Auditoria de privacidade | Próxima | Execução contínua autorizada |
+| T042 — Auditoria de privacidade | Concluída | Sentinelas redigidos, 58 testes x64/Win32 e auditoria de APIs/arquivos |
+| T043 — Release candidate reproduzível | Bloqueada por portões externos | VMs, A3 real, licença e assinatura de código pendentes |
 
 ## Tarefa em revisão
 
@@ -80,7 +81,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 56
+100% tests passed, 0 tests failed out of 58
 ```
 
 O empacotamento Release também executa os 53 testes em x64 e Win32, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.
