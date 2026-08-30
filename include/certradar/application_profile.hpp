@@ -43,7 +43,7 @@ struct PjeProfileInput {
 };
 
 const std::vector<ApplicationProfile>& application_profiles();
-const ApplicationProfile* find_application_profile(const std::string& id) noexcept;
+const ApplicationProfile* find_application_profile(const std::string& id);
 ProfileEvaluation evaluate_pje_profile(const PjeProfileInput& input);
 
 }  // namespace certradar

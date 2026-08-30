@@ -45,7 +45,8 @@ Atualizado em 30 de agosto de 2026.
 | T038 — Fluxo completo em VMs Windows 10/11 | Parcial, aguardando VMs | Coletor sanitizado pronto; execução manual Win10/11 pendente |
 | T039 — Modo compatível Windows 7 SP1/8.1 | Aguardando VMs | Coletor pronto, sem evidência de runtime nesses sistemas |
 | T040 — Modo legado básico Windows XP SP3 | Parcial, aguardando VM | PE32/subsistema 5.01 e busca básica aprovados no host; runtime XP não comprovado |
-| T041 — Fuzzing e análise estática | Próxima | Execução contínua autorizada |
+| T041 — Fuzzing e análise estática | Concluída | 10.500 mutações determinísticas, 56 testes x64/Win32 e clang-tidy em 16 fontes |
+| T042 — Auditoria de privacidade | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
@@ -79,7 +80,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 53
+100% tests passed, 0 tests failed out of 56
 ```
 
 O empacotamento Release também executa os 53 testes em x64 e Win32, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.

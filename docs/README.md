@@ -19,9 +19,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 13. [Pacote portátil Windows 10/11](13_PACOTE_PORTATIL.md)
 14. [Matriz de compatibilidade e evidências de VM](14_MATRIZ_COMPATIBILIDADE.md)
 15. [Modo legado Windows XP SP3](15_MODO_LEGADO_XP.md)
-16. [Estado da implementação](STATUS.md)
-17. [Glossário](GLOSSARIO.md)
-18. [Referências oficiais](REFERENCIAS.md)
+16. [Hardening e análise estática](16_HARDENING.md)
+17. [Estado da implementação](STATUS.md)
+18. [Glossário](GLOSSARIO.md)
+19. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

@@ -83,6 +83,7 @@ add_executable(certradar_tests
     tests/search_plan_tests.cpp
     tests/report_tests.cpp
     tests/retest_tests.cpp
+    tests/robustness_tests.cpp
     tests/signature_test_tests.cpp
     tests/smartcard_tests.cpp
     tests/ui_model_tests.cpp

@@ -101,7 +101,7 @@ const std::vector<ApplicationProfile>& application_profiles() {
     return profiles;
 }
 
-const ApplicationProfile* find_application_profile(const std::string& id) noexcept {
+const ApplicationProfile* find_application_profile(const std::string& id) {
     for (const auto& profile : application_profiles()) {
         if (profile.id == id) return &profile;
     }

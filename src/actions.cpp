@@ -20,7 +20,7 @@ const std::vector<AllowedAction>& allowed_actions() {
     return actions;
 }
 
-const AllowedAction* find_allowed_action(const std::string& id) noexcept {
+const AllowedAction* find_allowed_action(const std::string& id) {
     for (const auto& action : allowed_actions()) {
         if (action.id == id) return &action;
     }
@@ -29,7 +29,7 @@ const AllowedAction* find_allowed_action(const std::string& id) noexcept {
 
 ActionAuthorization authorize_action(
     const std::string& id,
-    const bool explicit_consent) noexcept {
+    const bool explicit_consent) {
     if (find_allowed_action(id) == nullptr) return ActionAuthorization::unknown_action;
     return explicit_consent ? ActionAuthorization::allowed : ActionAuthorization::consent_required;
 }
@@ -134,7 +134,7 @@ const std::vector<MiddlewareSource>& middleware_sources() {
     return sources;
 }
 
-const MiddlewareSource* find_middleware_source(const std::string& provider_name) noexcept {
+const MiddlewareSource* find_middleware_source(const std::string& provider_name) {
     std::string normalized = provider_name;
     std::transform(normalized.begin(), normalized.end(), normalized.begin(), [](const char value) {
         return static_cast<char>(std::tolower(static_cast<unsigned char>(value)));

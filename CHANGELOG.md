@@ -56,3 +56,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Pipeline de pacote portátil Release x64/x86 com runtime C++ estático, manifesto `asInvoker`, metadados de versão, allowlist de arquivos, SHA-256, validação de arquitetura PE e smoke test de inicialização; os artefatos continuam explicitamente não assinados.
 - Coletor sanitizado de evidências para qualificação em VMs, com validação automatizada de pacote/inicialização e checklist manual obrigatoriamente pendente; nenhuma compatibilidade é declarada sem execução no sistema alvo.
 - Coletor legado isolado em C++98 para XP x86, limitado à busca iterativa por nomes PFX/P12; build PE32/subsistema 5.01, imports e pacote `legacy-untested` são verificados sem alegar execução comprovada no XP.
+- Campanhas determinísticas com 10.500 entradas hostis e análise `clang-tidy` dos 16 fontes modernos; a revisão removeu garantias `noexcept` inseguras e explicitou ramos padrão na janela Win32.

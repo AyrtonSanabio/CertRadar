@@ -40,8 +40,8 @@ struct MiddlewareSource {
 };
 
 const std::vector<AllowedAction>& allowed_actions();
-const AllowedAction* find_allowed_action(const std::string& id) noexcept;
-ActionAuthorization authorize_action(const std::string& id, bool explicit_consent) noexcept;
+const AllowedAction* find_allowed_action(const std::string& id);
+ActionAuthorization authorize_action(const std::string& id, bool explicit_consent);
 ServiceActionPlan plan_smartcard_service_start(
     ServiceState current_state,
     bool explicit_consent) noexcept;
@@ -54,7 +54,7 @@ ImportActionResult open_certificate_import_wizard(
     bool explicit_consent,
     void* parent_window = nullptr);
 const std::vector<MiddlewareSource>& middleware_sources();
-const MiddlewareSource* find_middleware_source(const std::string& provider_name) noexcept;
+const MiddlewareSource* find_middleware_source(const std::string& provider_name);
 ImportActionResult open_official_middleware_page(
     const std::string& provider_name,
     bool explicit_consent,

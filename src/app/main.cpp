@@ -1,7 +1,6 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
-#define _UNICODE
 #include <windows.h>
 #include <commctrl.h>
 
@@ -155,6 +154,8 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                     if (scan_control) scan_control->cancel();
                     set_status(L"Cancelamento solicitado...");
                     return 0;
+                default:
+                    break;
             }
             break;
         case scan_progress_message:
@@ -169,6 +170,8 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
             finish_previous_thread();
             PostQuitMessage(0);
             return 0;
+        default:
+            break;
     }
     return DefWindowProcW(window, message, wparam, lparam);
 }
