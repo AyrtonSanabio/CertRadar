@@ -3,6 +3,7 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <cryptuiapi.h>
 
 namespace certradar {
 
@@ -79,6 +80,43 @@ ServiceActionResult execute_smartcard_service_start(const bool explicit_consent)
     }
     CloseServiceHandle(service);
     CloseServiceHandle(manager);
+    return result;
+}
+
+ImportActionPlan plan_certificate_import(
+    const CandidateState candidate_state,
+    const bool explicit_consent) noexcept {
+    if (!explicit_consent || candidate_state != CandidateState::recognized) {
+        return ImportActionPlan::blocked;
+    }
+    return ImportActionPlan::open_wizard;
+}
+
+ImportActionResult open_certificate_import_wizard(
+    const std::filesystem::path& candidate,
+    const bool explicit_consent,
+    void* const parent_window) {
+    ImportActionResult result;
+    const auto candidate_state = inspect_pkcs12_container(candidate, 32ULL * 1024ULL * 1024ULL);
+    if (plan_certificate_import(candidate_state, explicit_consent) != ImportActionPlan::open_wizard) {
+        return result;
+    }
+
+    CRYPTUI_WIZ_IMPORT_SRC_INFO source{};
+    source.dwSize = sizeof(source);
+    source.dwSubjectChoice = CRYPTUI_WIZ_IMPORT_SUBJECT_FILE;
+    source.pwszFileName = candidate.c_str();
+    source.dwFlags = 0;
+    source.pwszPassword = nullptr;
+    const BOOL imported = CryptUIWizImport(
+        0, reinterpret_cast<HWND>(parent_window), L"Importar certificado com o Windows",
+        &source, nullptr);
+    if (imported == FALSE) {
+        result.state = ActionExecutionState::failed;
+        result.error_code = GetLastError();
+        return result;
+    }
+    result.state = ActionExecutionState::applied;
     return result;
 }
 

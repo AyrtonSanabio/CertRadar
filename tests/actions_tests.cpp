@@ -34,3 +34,17 @@ TEST_CASE("smart card service action is planned without mutating the test machin
     CHECK(certradar::plan_smartcard_service_start(ServiceState::inaccessible, true) ==
           ServiceActionPlan::start);
 }
+
+TEST_CASE("import wizard only opens for a recognized container with consent") {
+    using certradar::CandidateState;
+    using certradar::ImportActionPlan;
+
+    CHECK(certradar::plan_certificate_import(CandidateState::recognized, false) ==
+          ImportActionPlan::blocked);
+    CHECK(certradar::plan_certificate_import(CandidateState::invalid, true) ==
+          ImportActionPlan::blocked);
+    CHECK(certradar::plan_certificate_import(CandidateState::too_large, true) ==
+          ImportActionPlan::blocked);
+    CHECK(certradar::plan_certificate_import(CandidateState::recognized, true) ==
+          ImportActionPlan::open_wizard);
+}

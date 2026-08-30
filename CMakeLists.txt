@@ -83,7 +83,7 @@ add_executable(certradar_tests
     tests/ui_model_tests.cpp
 )
 if(WIN32)
-    target_link_libraries(certradar_core PRIVATE advapi32 bcrypt crypt32 ncrypt ole32 shell32 winscard)
+    target_link_libraries(certradar_core PRIVATE advapi32 bcrypt crypt32 cryptui ncrypt ole32 shell32 winscard)
 endif()
 target_link_libraries(certradar_tests PRIVATE certradar_core doctest::doctest)
 certradar_enable_strict_warnings(certradar_tests)
