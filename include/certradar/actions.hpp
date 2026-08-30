@@ -33,6 +33,12 @@ struct ImportActionResult {
     unsigned long error_code{0};
 };
 
+struct MiddlewareSource {
+    std::string id;
+    std::string provider_marker;
+    std::string official_url;
+};
+
 const std::vector<AllowedAction>& allowed_actions();
 const AllowedAction* find_allowed_action(const std::string& id) noexcept;
 ActionAuthorization authorize_action(const std::string& id, bool explicit_consent) noexcept;
@@ -45,6 +51,12 @@ ImportActionPlan plan_certificate_import(
     bool explicit_consent) noexcept;
 ImportActionResult open_certificate_import_wizard(
     const std::filesystem::path& candidate,
+    bool explicit_consent,
+    void* parent_window = nullptr);
+const std::vector<MiddlewareSource>& middleware_sources();
+const MiddlewareSource* find_middleware_source(const std::string& provider_name) noexcept;
+ImportActionResult open_official_middleware_page(
+    const std::string& provider_name,
     bool explicit_consent,
     void* parent_window = nullptr);
 

@@ -48,3 +48,15 @@ TEST_CASE("import wizard only opens for a recognized container with consent") {
     CHECK(certradar::plan_certificate_import(CandidateState::recognized, true) ==
           ImportActionPlan::open_wizard);
 }
+
+TEST_CASE("middleware source is selected from a closed provider registry") {
+    const auto* safesign = certradar::find_middleware_source("SafeSign Standard Cryptographic Service Provider");
+    REQUIRE(safesign != nullptr);
+    CHECK(safesign->id == "safesign");
+    CHECK(safesign->official_url.rfind("https://", 0) == 0);
+
+    const auto* etoken = certradar::find_middleware_source("eToken Base Cryptographic Provider");
+    REQUIRE(etoken != nullptr);
+    CHECK(etoken->id == "etoken");
+    CHECK(certradar::find_middleware_source("Provider desconhecido") == nullptr);
+}

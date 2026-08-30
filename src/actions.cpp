@@ -4,6 +4,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <cryptuiapi.h>
+#include <shellapi.h>
+
+#include <algorithm>
+#include <cctype>
 
 namespace certradar {
 
@@ -114,6 +118,56 @@ ImportActionResult open_certificate_import_wizard(
     if (imported == FALSE) {
         result.state = ActionExecutionState::failed;
         result.error_code = GetLastError();
+        return result;
+    }
+    result.state = ActionExecutionState::applied;
+    return result;
+}
+
+const std::vector<MiddlewareSource>& middleware_sources() {
+    static const std::vector<MiddlewareSource> sources{
+        {"safesign", "safesign", "https://safesign.gdamericadosul.com.br/download"},
+        {"safenet", "safenet", "https://cpl.thalesgroup.com/en-gb/access-management/security-applications/authentication-client-token-management"},
+        {"etoken", "etoken", "https://cpl.thalesgroup.com/en-gb/access-management/security-applications/authentication-client-token-management"},
+        {"watchdata-serpro", "watchdata", "https://certificados.serpro.gov.br/arserpro/pages/information/drivers_token_download.jsf"},
+    };
+    return sources;
+}
+
+const MiddlewareSource* find_middleware_source(const std::string& provider_name) noexcept {
+    std::string normalized = provider_name;
+    std::transform(normalized.begin(), normalized.end(), normalized.begin(), [](const char value) {
+        return static_cast<char>(std::tolower(static_cast<unsigned char>(value)));
+    });
+    for (const auto& source : middleware_sources()) {
+        if (normalized.find(source.provider_marker) != std::string::npos) return &source;
+    }
+    return nullptr;
+}
+
+ImportActionResult open_official_middleware_page(
+    const std::string& provider_name,
+    const bool explicit_consent,
+    void* const parent_window) {
+    ImportActionResult result;
+    if (!explicit_consent) return result;
+    const auto* const source = find_middleware_source(provider_name);
+    if (source == nullptr) return result;
+
+    const int required = MultiByteToWideChar(
+        CP_UTF8, 0, source->official_url.c_str(), -1, nullptr, 0);
+    if (required <= 1) {
+        result.state = ActionExecutionState::failed;
+        result.error_code = ERROR_INVALID_DATA;
+        return result;
+    }
+    std::wstring url(static_cast<std::size_t>(required), L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, source->official_url.c_str(), -1, url.data(), required);
+    const auto execution = reinterpret_cast<INT_PTR>(ShellExecuteW(
+        reinterpret_cast<HWND>(parent_window), L"open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL));
+    if (execution <= 32) {
+        result.state = ActionExecutionState::failed;
+        result.error_code = static_cast<unsigned long>(execution);
         return result;
     }
     result.state = ActionExecutionState::applied;
