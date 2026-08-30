@@ -6,9 +6,9 @@ O **CertRadar** será um assistente portátil de suporte a certificados digitais
 
 ## Estado atual
 
-**Fase: especificação para revisão.**
+**Fase: implementação incremental, ainda sem release assinada.**
 
-Este repositório ainda não contém implementação executável. A documentação define o produto proposto, os limites de segurança, a arquitetura candidata, a estratégia de testes e os critérios que deverão ser satisfeitos antes de cada entrega.
+O repositório contém um núcleo nativo em C++17, testes automatizados x64/Win32 e uma interface de desenvolvimento para busca segura de certificados A1. Os módulos de coleta, diagnóstico, ações autorizadas, reteste e o primeiro perfil PJe já estão em construção; a matriz de VMs e o empacotamento ainda não foram concluídos.
 
 ## Proposta de valor
 
@@ -91,6 +91,8 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Roadmap](docs/08_ROADMAP.md)
 - [Decisões e dúvidas para revisão](docs/09_DECISOES_PARA_REVISAO.md)
 - [Fluxo de implementação acompanhada](docs/10_FLUXO_DE_IMPLEMENTACAO_ACOMPANHADA.md)
+- [Contrato de fatos](docs/11_CONTRATO_DE_FATOS.md)
+- [Perfil de aplicação PJe](docs/12_PERFIL_PJE.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)
@@ -104,7 +106,7 @@ A arquitetura candidata separa um coletor nativo, restrito e majoritariamente de
 
 ## Execução
 
-Ainda não existe versão distribuível ou assinada do produto. O checkpoint T001 contém o núcleo mínimo e seu primeiro teste automatizado.
+Ainda não existe versão distribuível ou assinada do produto.
 Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela somente inicia a busca após o usuário pressionar **Iniciar busca**. Os binários dessa pasta ainda não constituem uma release assinada.
 
 ### Executar os testes do checkpoint atual

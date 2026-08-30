@@ -47,6 +47,7 @@ endfunction()
 
 add_library(certradar_core STATIC
     src/actions.cpp
+    src/application_profile.cpp
     src/certificates.cpp
     src/diagnosis.cpp
     src/facts.cpp
@@ -69,6 +70,7 @@ enable_testing()
 
 add_executable(certradar_tests
     tests/actions_tests.cpp
+    tests/application_profile_tests.cpp
     tests/test_main.cpp
     tests/facts_tests.cpp
     tests/certificates_tests.cpp

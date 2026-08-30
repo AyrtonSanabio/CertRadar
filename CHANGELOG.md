@@ -52,3 +52,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Abertura do assistente oficial `CryptUIWizImport` apenas para PFX/P12 reconhecido e autorizado, sem senha controlada pelo CertRadar e sem comando de shell.
 - Catálogo fechado de provedores conhecidos que, após consentimento, direciona o suporte às páginas HTTPS oficiais de SafeSign, SafeNet/eToken e Watchdata; provedores desconhecidos são recusados e nenhum instalador é baixado ou executado automaticamente.
 - Plano de reteste seletivo por ação autorizada e comparação estruturada antes/depois, distinguindo problema resolvido, regressão, estado inalterado e evidência incompleta sem reexecutar verificações não relacionadas.
+- Primeiro perfil de aplicação para PJe, com avaliação independente de certificado, validade, chave privada, cadeia, PJeOffice e dispositivo A3; o resultado local não promete disponibilidade do tribunal nem sucesso do login.

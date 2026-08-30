@@ -30,3 +30,8 @@ Referências consultadas durante a especificação. Situação verificada em 28 
 ## Privacidade
 
 - [Guia de segurança da informação para agentes de tratamento de pequeno porte — ANPD](https://www.gov.br/anpd/pt-br/assuntos/noticias/anpd-publica-guia-de-seguranca-para-agentes-de-tratamento-de-pequeno-porte)
+
+## PJe
+
+- [PJeOffice Pro — Documentação PJe](https://docs.pje.jus.br/servicos-negociais/pjeoffice-pro/)
+- [Certificação Digital — Portal CNJ](https://www.cnj.jus.br/programas-e-acoes/processo-judicial-eletronico-pje/certificacao-digital-2/)

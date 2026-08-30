@@ -40,7 +40,8 @@ Atualizado em 30 de agosto de 2026.
 | T033 — Assistente oficial de importação | Concluída | CryptoUI interativa, PFX reconhecido e consentimento |
 | T034 — Middleware oficial | Concluída | Catálogo fechado, consentimento e somente páginas HTTPS oficiais |
 | T035 — Comparação antes/depois | Concluída | Reteste seletivo classifica resolução, regressão e evidência incompleta |
-| T036 — Perfil de aplicação | Próxima | Execução contínua autorizada |
+| T036 — Perfil de aplicação PJe | Concluída | Certificado, chave, cadeia, PJeOffice e A3 avaliados separadamente |
+| T037 — Pacote portátil Windows 10/11 | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
@@ -74,7 +75,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 47
+100% tests passed, 0 tests failed out of 53
 ```
 
 ## Regime de execução

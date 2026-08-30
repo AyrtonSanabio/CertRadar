@@ -14,10 +14,11 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 8. [Roadmap](08_ROADMAP.md)
 9. [Decisões para revisão](09_DECISOES_PARA_REVISAO.md)
 10. [Fluxo de implementação acompanhada](10_FLUXO_DE_IMPLEMENTACAO_ACOMPANHADA.md)
-11. [Estado da implementação](STATUS.md)
-12. [Glossário](GLOSSARIO.md)
-13. [Referências oficiais](REFERENCIAS.md)
-14. [Contrato de fatos](11_CONTRATO_DE_FATOS.md)
+11. [Contrato de fatos](11_CONTRATO_DE_FATOS.md)
+12. [Perfil de aplicação PJe](12_PERFIL_PJE.md)
+13. [Estado da implementação](STATUS.md)
+14. [Glossário](GLOSSARIO.md)
+15. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 
