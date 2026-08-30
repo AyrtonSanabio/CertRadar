@@ -94,6 +94,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Contrato de fatos](docs/11_CONTRATO_DE_FATOS.md)
 - [Perfil de aplicação PJe](docs/12_PERFIL_PJE.md)
 - [Pacote portátil Windows 10/11](docs/13_PACOTE_PORTATIL.md)
+- [Matriz de compatibilidade e evidências de VM](docs/14_MATRIZ_COMPATIBILIDADE.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)

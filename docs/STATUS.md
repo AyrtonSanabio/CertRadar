@@ -42,7 +42,8 @@ Atualizado em 30 de agosto de 2026.
 | T035 — Comparação antes/depois | Concluída | Reteste seletivo classifica resolução, regressão e evidência incompleta |
 | T036 — Perfil de aplicação PJe | Concluída | Certificado, chave, cadeia, PJeOffice e A3 avaliados separadamente |
 | T037 — Pacote portátil Windows 10/11 | Concluída | Release x64/x86, runtime estático, hashes, PE e smoke test no Windows 10 |
-| T038 — Fluxo completo em VMs Windows 10/11 | Próxima | Requer matriz de VMs, incluindo Windows 11 |
+| T038 — Fluxo completo em VMs Windows 10/11 | Parcial, aguardando VMs | Coletor sanitizado pronto; execução manual Win10/11 pendente |
+| T039 — Modo compatível Windows 7 SP1/8.1 | Aguardando VMs | Coletor pronto, sem evidência de runtime nesses sistemas |
 
 ## Tarefa em revisão
 

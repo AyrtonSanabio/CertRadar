@@ -17,9 +17,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 11. [Contrato de fatos](11_CONTRATO_DE_FATOS.md)
 12. [Perfil de aplicação PJe](12_PERFIL_PJE.md)
 13. [Pacote portátil Windows 10/11](13_PACOTE_PORTATIL.md)
-14. [Estado da implementação](STATUS.md)
-15. [Glossário](GLOSSARIO.md)
-16. [Referências oficiais](REFERENCIAS.md)
+14. [Matriz de compatibilidade e evidências de VM](14_MATRIZ_COMPATIBILIDADE.md)
+15. [Estado da implementação](STATUS.md)
+16. [Glossário](GLOSSARIO.md)
+17. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 
