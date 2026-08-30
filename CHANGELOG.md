@@ -48,3 +48,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Motor de diagnóstico puro com conclusões explicáveis por fato, causa provável, confiança e ação, incluindo resposta de evidência insuficiente.
 - Relatório JSON local e resumo copiável para chamado, com mascaramento de identificadores e caminhos e declaração explícita de ausência de chave privada.
 - Allowlist compilada de ações corretivas com IDs estáveis, descrição de impacto e bloqueio obrigatório sem consentimento; comandos arbitrários são recusados.
+- Ação controlada para iniciar `SCardSvr`: não altera serviço já ativo, exige consentimento, usa Service Control Manager diretamente e confirma o estado depois da mudança.

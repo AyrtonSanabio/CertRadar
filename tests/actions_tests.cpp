@@ -20,3 +20,17 @@ TEST_CASE("every allowed action has a stable id and consent description") {
         CHECK(action.id.find(' ') == std::string::npos);
     }
 }
+
+TEST_CASE("smart card service action is planned without mutating the test machine") {
+    using certradar::ServiceActionPlan;
+    using certradar::ServiceState;
+
+    CHECK(certradar::plan_smartcard_service_start(ServiceState::stopped, false) ==
+          ServiceActionPlan::blocked);
+    CHECK(certradar::plan_smartcard_service_start(ServiceState::running, true) ==
+          ServiceActionPlan::no_change);
+    CHECK(certradar::plan_smartcard_service_start(ServiceState::stopped, true) ==
+          ServiceActionPlan::start);
+    CHECK(certradar::plan_smartcard_service_start(ServiceState::inaccessible, true) ==
+          ServiceActionPlan::start);
+}

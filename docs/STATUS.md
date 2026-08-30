@@ -36,7 +36,8 @@ Atualizado em 28 de agosto de 2026.
 | T029 — Relatório local mascarado | Concluída | JSON local-only e mascaramento testados |
 | T030 — Resumo para chamado | Concluída | Texto copiável com próxima ação |
 | T031 — Executor allowlist | Concluída | IDs compilados recusam texto arbitrário e exigem consentimento |
-| T032 — Ação segura no serviço | Próxima | Execução contínua autorizada |
+| T032 — Ação segura no serviço | Concluída | Consentimento, início controlado e reteste limitado |
+| T033 — Assistente oficial de importação | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
