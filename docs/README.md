@@ -21,9 +21,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 15. [Modo legado Windows XP SP3](15_MODO_LEGADO_XP.md)
 16. [Hardening e análise estática](16_HARDENING.md)
 17. [Auditoria de privacidade](17_AUDITORIA_DE_PRIVACIDADE.md)
-18. [Estado da implementação](STATUS.md)
-19. [Glossário](GLOSSARIO.md)
-20. [Referências oficiais](REFERENCIAS.md)
+18. [Gate de release candidate](18_RELEASE_CANDIDATE.md)
+19. [Estado da implementação](STATUS.md)
+20. [Glossário](GLOSSARIO.md)
+21. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

@@ -58,3 +58,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Coletor legado isolado em C++98 para XP x86, limitado à busca iterativa por nomes PFX/P12; build PE32/subsistema 5.01, imports e pacote `legacy-untested` são verificados sem alegar execução comprovada no XP.
 - Campanhas determinísticas com 10.500 entradas hostis e análise `clang-tidy` dos 16 fontes modernos; a revisão removeu garantias `noexcept` inseguras e explicitou ramos padrão na janela Win32.
 - Sanitização defensiva das saídas de suporte e auditoria automatizada de privacidade, recusando credenciais versionadas, exportação de chaves, uploads, processos arbitrários e persistência inesperada no código moderno.
+- Gate de release candidate que enumera bloqueios externos (VMs qualificadas, A3 real, licença, assinatura de código, pacotes atuais e árvore limpa) sem transformar ausência de evidência em aprovação.

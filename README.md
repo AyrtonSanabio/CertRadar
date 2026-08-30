@@ -98,6 +98,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Modo legado Windows XP SP3](docs/15_MODO_LEGADO_XP.md)
 - [Hardening e análise estática](docs/16_HARDENING.md)
 - [Auditoria de privacidade](docs/17_AUDITORIA_DE_PRIVACIDADE.md)
+- [Gate de release candidate](docs/18_RELEASE_CANDIDATE.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)
