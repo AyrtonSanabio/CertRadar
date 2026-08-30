@@ -39,7 +39,8 @@ Atualizado em 30 de agosto de 2026.
 | T032 — Ação segura no serviço | Concluída | Consentimento, início controlado e reteste limitado |
 | T033 — Assistente oficial de importação | Concluída | CryptoUI interativa, PFX reconhecido e consentimento |
 | T034 — Middleware oficial | Concluída | Catálogo fechado, consentimento e somente páginas HTTPS oficiais |
-| T035 — Comparação antes/depois | Próxima | Execução contínua autorizada |
+| T035 — Comparação antes/depois | Concluída | Reteste seletivo classifica resolução, regressão e evidência incompleta |
+| T036 — Perfil de aplicação | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
@@ -73,7 +74,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 44
+100% tests passed, 0 tests failed out of 47
 ```
 
 ## Regime de execução

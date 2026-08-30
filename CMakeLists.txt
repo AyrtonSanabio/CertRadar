@@ -56,6 +56,7 @@ add_library(certradar_core STATIC
     src/search.cpp
     src/search_plan.cpp
     src/report.cpp
+    src/retest.cpp
     src/signature_test.cpp
     src/smartcard.cpp
     src/ui_model.cpp
@@ -78,6 +79,7 @@ add_executable(certradar_tests
     tests/search_tests.cpp
     tests/search_plan_tests.cpp
     tests/report_tests.cpp
+    tests/retest_tests.cpp
     tests/signature_test_tests.cpp
     tests/smartcard_tests.cpp
     tests/ui_model_tests.cpp
