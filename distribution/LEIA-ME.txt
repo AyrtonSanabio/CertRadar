@@ -1,0 +1,34 @@
+CertRadar 0.1.0 - pacote de desenvolvimento nao assinado
+========================================================
+
+O que faz
+---------
+O CertRadar auxilia o suporte de certificados digitais no Windows. Esta versao
+de desenvolvimento inicia uma busca local por arquivos A1 PFX/P12 somente apos
+o usuario clicar em "Iniciar busca". Ela nao envia arquivos nem possui telemetria.
+
+Como executar
+-------------
+1. Confirme o SHA-256 do arquivo ZIP recebido.
+2. Extraia toda a pasta para um local controlado.
+3. Execute certradar.exe como usuario normal.
+4. Nao aceite uma solicitacao de administrador inesperada: o executavel declara
+   nivel asInvoker e nao deve pedir elevacao ao iniciar.
+
+Escopo deste pacote
+-------------------
+- Windows 10 e Windows 11.
+- Arquitetura indicada no nome do pacote: x64 ou x86.
+- Sem instalador, servico residente ou atualizacao automatica.
+- Sem assinatura de codigo nesta etapa; o Windows pode exibir um alerta.
+
+Seguranca
+---------
+O programa nao deve receber senha de PFX nem PIN do token em campos proprios.
+Nao compartilhe certificados, chaves privadas ou relatorios sem revisar os dados.
+Consulte SECURITY.md para os limites e o canal de reporte do projeto.
+
+Licenca
+-------
+A licenca do projeto ainda nao foi escolhida. Este pacote e destinado somente a
+avaliacao controlada e nao concede permissao de redistribuicao publica.

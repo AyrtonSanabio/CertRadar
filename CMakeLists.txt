@@ -4,12 +4,13 @@ project(
     CertRadar
     VERSION 0.1.0
     DESCRIPTION "Assistente local de diagnostico para suporte a certificados digitais"
-    LANGUAGES CXX
+    LANGUAGES CXX RC
 )
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 include(FetchContent)
 
@@ -95,6 +96,9 @@ certradar_enable_strict_warnings(certradar_tests)
 include("${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake")
 doctest_discover_tests(certradar_tests)
 
-add_executable(certradar WIN32 src/app/main.cpp)
+add_executable(certradar WIN32 src/app/main.cpp src/app/certradar.rc)
 target_link_libraries(certradar PRIVATE certradar_core comctl32)
+if(MSVC)
+    target_link_options(certradar PRIVATE /MANIFEST:NO)
+endif()
 certradar_enable_strict_warnings(certradar)

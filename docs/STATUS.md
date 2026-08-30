@@ -41,7 +41,8 @@ Atualizado em 30 de agosto de 2026.
 | T034 — Middleware oficial | Concluída | Catálogo fechado, consentimento e somente páginas HTTPS oficiais |
 | T035 — Comparação antes/depois | Concluída | Reteste seletivo classifica resolução, regressão e evidência incompleta |
 | T036 — Perfil de aplicação PJe | Concluída | Certificado, chave, cadeia, PJeOffice e A3 avaliados separadamente |
-| T037 — Pacote portátil Windows 10/11 | Próxima | Execução contínua autorizada |
+| T037 — Pacote portátil Windows 10/11 | Concluída | Release x64/x86, runtime estático, hashes, PE e smoke test no Windows 10 |
+| T038 — Fluxo completo em VMs Windows 10/11 | Próxima | Requer matriz de VMs, incluindo Windows 11 |
 
 ## Tarefa em revisão
 
@@ -77,6 +78,8 @@ Resultado atual:
 ```text
 100% tests passed, 0 tests failed out of 53
 ```
+
+O empacotamento Release também executa os 53 testes em x64 e Win32, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.
 
 ## Regime de execução
 

@@ -16,9 +16,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 10. [Fluxo de implementação acompanhada](10_FLUXO_DE_IMPLEMENTACAO_ACOMPANHADA.md)
 11. [Contrato de fatos](11_CONTRATO_DE_FATOS.md)
 12. [Perfil de aplicação PJe](12_PERFIL_PJE.md)
-13. [Estado da implementação](STATUS.md)
-14. [Glossário](GLOSSARIO.md)
-15. [Referências oficiais](REFERENCIAS.md)
+13. [Pacote portátil Windows 10/11](13_PACOTE_PORTATIL.md)
+14. [Estado da implementação](STATUS.md)
+15. [Glossário](GLOSSARIO.md)
+16. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 
