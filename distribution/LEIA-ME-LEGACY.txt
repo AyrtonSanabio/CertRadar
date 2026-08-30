@@ -1,0 +1,32 @@
+CertRadar Legacy 0.1.0 - pacote XP x86 ainda nao qualificado
+==========================================================
+
+ATENCAO
+-------
+Este executavel foi compilado para PE32/subsistema Windows 5.01, mas ainda nao
+foi executado em uma VM Windows XP SP3. O nome do pacote inclui "untested" para
+impedir que compatibilidade de build seja confundida com compatibilidade real.
+
+Escopo reduzido
+---------------
+- Procura nomes de arquivos com extensao .pfx e .p12.
+- Comeca por Downloads, Area de Trabalho e Documentos quando essas pastas existem.
+- Depois percorre o perfil atual com uma fila iterativa.
+- Ignora reparse points e nao contorna permissoes.
+- Nao abre o conteudo do certificado, nao pede senha e nao altera arquivos.
+- Nao diagnostica store, cadeia, revogacao, token, middleware ou PJeOffice.
+- Nao executa correcoes.
+
+Uso em prompt de comando
+------------------------
+certradar-legacy.exe
+certradar-legacy.exe --scan-root "C:\Documents and Settings\Cliente"
+
+Windows XP nao recebe atualizacoes de seguranca. Este modo existe somente para
+reduzir verificacoes manuais em atendimentos inevitaveis e nao torna o sistema
+seguro ou suportado novamente.
+
+Licenca
+-------
+A licenca do projeto ainda nao foi escolhida. Este pacote e destinado somente a
+avaliacao controlada e nao concede permissao de redistribuicao publica.

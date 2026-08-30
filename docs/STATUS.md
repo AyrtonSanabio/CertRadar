@@ -44,6 +44,8 @@ Atualizado em 30 de agosto de 2026.
 | T037 — Pacote portátil Windows 10/11 | Concluída | Release x64/x86, runtime estático, hashes, PE e smoke test no Windows 10 |
 | T038 — Fluxo completo em VMs Windows 10/11 | Parcial, aguardando VMs | Coletor sanitizado pronto; execução manual Win10/11 pendente |
 | T039 — Modo compatível Windows 7 SP1/8.1 | Aguardando VMs | Coletor pronto, sem evidência de runtime nesses sistemas |
+| T040 — Modo legado básico Windows XP SP3 | Parcial, aguardando VM | PE32/subsistema 5.01 e busca básica aprovados no host; runtime XP não comprovado |
+| T041 — Fuzzing e análise estática | Próxima | Execução contínua autorizada |
 
 ## Tarefa em revisão
 
