@@ -1,5 +1,6 @@
 #include "certradar/ui_model.hpp"
 
+#include <algorithm>
 #include <array>
 
 namespace certradar {
@@ -69,6 +70,17 @@ std::wstring provider_kind_summary(const ProviderKind kind) {
         case ProviderKind::unknown: return L"provider desconhecido";
     }
     return L"provider desconhecido";
+}
+
+int certificate_support_priority(const CertificateRecord& certificate) noexcept {
+    switch (certificate.validity) {
+        case CertificateValidity::expired: return 0;
+        case CertificateValidity::not_yet_valid: return 1;
+        case CertificateValidity::expiring_soon: return 2;
+        case CertificateValidity::valid:
+            return certificate.has_private_key_association ? 4 : 3;
+    }
+    return 5;
 }
 
 }  // namespace
@@ -219,6 +231,20 @@ std::wstring build_certificate_store_support_summary(
     const auto insertion = first_line == std::wstring::npos ? summary.size() : first_line + 2;
     summary.insert(insertion, format_platform_summary(platform) + L"\r\n");
     return summary;
+}
+
+std::vector<std::size_t> build_certificate_display_order(
+    const CertificateStoreResult& result) {
+    std::vector<std::size_t> order;
+    order.reserve(result.certificates.size());
+    for (std::size_t index = 0; index < result.certificates.size(); ++index) {
+        order.push_back(index);
+    }
+    std::stable_sort(order.begin(), order.end(), [&result](const auto left, const auto right) {
+        return certificate_support_priority(result.certificates[left]) <
+               certificate_support_priority(result.certificates[right]);
+    });
+    return order;
 }
 
 }  // namespace certradar

@@ -28,9 +28,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 22. [Ambiente no resumo do chamado](22_AMBIENTE_NO_RESUMO.md)
 23. [Certificados instalados na interface](23_CERTIFICADOS_INSTALADOS_NA_INTERFACE.md)
 24. [Resumo sanitizado dos certificados instalados](24_RESUMO_CERTIFICADOS_INSTALADOS.md)
-25. [Estado da implementação](STATUS.md)
-26. [Glossário](GLOSSARIO.md)
-27. [Referências oficiais](REFERENCIAS.md)
+25. [Prioridade visual dos certificados instalados](25_PRIORIDADE_CERTIFICADOS_INSTALADOS.md)
+26. [Estado da implementação](STATUS.md)
+27. [Glossário](GLOSSARIO.md)
+28. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

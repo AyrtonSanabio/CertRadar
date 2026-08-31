@@ -5,6 +5,7 @@
 #include "certradar/search.hpp"
 
 #include <string>
+#include <vector>
 
 namespace certradar {
 
@@ -33,5 +34,7 @@ std::wstring build_certificate_store_support_summary(
 std::wstring build_certificate_store_support_summary(
     const CertificateStoreResult& result,
     const WindowsPlatform& platform);
+std::vector<std::size_t> build_certificate_display_order(
+    const CertificateStoreResult& result);
 
 }  // namespace certradar

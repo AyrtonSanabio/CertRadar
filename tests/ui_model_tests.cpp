@@ -180,3 +180,27 @@ TEST_CASE("installed certificate store support summary contains counts without i
     CHECK(summary.find(L"98765432100") == std::wstring::npos);
     CHECK(summary.find(L"FEDCBA9876543210") == std::wstring::npos);
 }
+
+TEST_CASE("installed certificates display problems before healthy credentials") {
+    certradar::CertificateStoreResult result;
+    result.opened = true;
+    result.certificates.resize(6);
+    result.certificates[0].validity = certradar::CertificateValidity::valid;
+    result.certificates[0].has_private_key_association = true;
+    result.certificates[1].validity = certradar::CertificateValidity::valid;
+    result.certificates[1].has_private_key_association = false;
+    result.certificates[2].validity = certradar::CertificateValidity::expiring_soon;
+    result.certificates[3].validity = certradar::CertificateValidity::not_yet_valid;
+    result.certificates[4].validity = certradar::CertificateValidity::expired;
+    result.certificates[5].validity = certradar::CertificateValidity::expired;
+
+    const auto order = certradar::build_certificate_display_order(result);
+
+    REQUIRE(order.size() == 6);
+    CHECK(order[0] == 4);
+    CHECK(order[1] == 5);
+    CHECK(order[2] == 3);
+    CHECK(order[3] == 2);
+    CHECK(order[4] == 1);
+    CHECK(order[5] == 0);
+}

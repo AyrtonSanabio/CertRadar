@@ -198,14 +198,15 @@ void show_installed_certificate_result() {
         const std::wstring empty = L"Nenhum certificado foi encontrado no store Pessoal do usuário.";
         SendMessageW(results_list, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(empty.c_str()));
     } else {
-        for (std::size_t index = 0; index < result.certificates.size(); ++index) {
+        const auto display_order = certradar::build_certificate_display_order(result);
+        for (std::size_t row = 0; row < display_order.size(); ++row) {
             const auto label = certradar::format_certificate_summary(
-                result.certificates[index], index + 1);
+                result.certificates[display_order[row]], row + 1);
             SendMessageW(results_list, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(label.c_str()));
         }
     }
     set_status(std::to_wstring(result.certificates.size()) +
-               L" certificado(s) no store Pessoal. Somente metadados públicos foram lidos.");
+               L" certificado(s) no store Pessoal. Situações que exigem atenção aparecem primeiro.");
     set_scan_controls(false);
     EnableWindow(copy_summary_button, TRUE);
 }
