@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-A T049 transforma a consulta visual da T048 em uma evidência curta para o chamado. Depois que **Instalados** termina com sucesso, **Copiar resumo** passa a copiar um texto específico para o store pessoal do usuário atual.
+A T049 transforma a consulta visual da T048 em uma evidência curta para o chamado. Depois que a consulta de certificados termina com sucesso, **Copiar resumo** passa a copiar um texto específico para o store exibido. A T051 posterior estendeu o mesmo contrato ao store Pessoal da máquina.
 
 O atendente consegue registrar quantos certificados existem e quais classes de problema aparecem, sem transcrever dados pessoais nem enviar o certificado.
 
@@ -11,7 +11,7 @@ O atendente consegue registrar quantos certificados existem e quais classes de p
 O resumo contém:
 
 - ambiente detectado, quando disponível;
-- disponibilidade do store Pessoal;
+- disponibilidade e escopo do store Pessoal consultado;
 - quantidade total de certificados públicos;
 - contagens de ainda não válidos, válidos, próximos do vencimento e expirados;
 - contagens com e sem associação aparente de chave privada;
@@ -37,7 +37,7 @@ O resumo trabalha apenas com enums, booleanos e quantidades. Mesmo que os regist
 O botão de cópia consulta a visualização ativa:
 
 - na busca A1, mantém o resumo de arquivos da T044/T047;
-- em **Instalados**, usa o resumo agregado desta tarefa.
+- em **Cert. usuário** ou **Cert. máquina**, usa o resumo agregado desta tarefa e identifica o escopo.
 
 O botão só é habilitado para certificados depois que a enumeração foi concluída e o store foi aberto. Uma nova operação o desabilita até haver resultado consistente.
 

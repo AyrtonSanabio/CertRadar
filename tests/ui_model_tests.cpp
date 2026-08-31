@@ -204,3 +204,15 @@ TEST_CASE("installed certificates display problems before healthy credentials") 
     CHECK(order[4] == 1);
     CHECK(order[5] == 0);
 }
+
+TEST_CASE("certificate store summary identifies the selected Windows scope") {
+    certradar::CertificateStoreResult machine;
+    machine.scope = certradar::StoreScope::local_machine;
+    machine.opened = true;
+
+    const auto summary =
+        certradar::build_certificate_store_support_summary(machine);
+
+    CHECK(summary.find(L"Store Pessoal da máquina: acessível") != std::wstring::npos);
+    CHECK(summary.find(L"Store Pessoal do usuário") == std::wstring::npos);
+}

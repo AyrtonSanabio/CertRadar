@@ -55,25 +55,26 @@ Atualizado em 31 de agosto de 2026.
 | T048 — Certificados instalados na interface | Concluída | Store pessoal do usuário lido em segundo plano; 62 testes x64/Win32 |
 | T049 — Resumo sanitizado dos certificados instalados | Concluída | Contagens sem identidade nem identificadores completos; 63 testes x64/Win32 |
 | T050 — Prioridade visual dos certificados instalados | Concluída | Problemas aparecem antes das credenciais saudáveis; 64 testes x64/Win32 |
+| T051 — Store Pessoal da máquina na interface | Concluída | Usuário/máquina separados sem elevação; 65 testes x64/Win32 |
 
 ## Tarefa em revisão
 
-### T050 — Prioridade visual dos certificados instalados
+### T051 — Store Pessoal da máquina na interface
 
 Entregue:
 
-- regra pura que calcula uma ordem de índices sem alterar os registros coletados;
-- expirados e ainda não válidos antes de certificados apenas próximos do vencimento;
-- credenciais válidas sem associação de chave antes das válidas com associação;
-- estabilidade da ordem original dentro da mesma prioridade;
-- integração da ordem na lista da janela e mensagem operacional explícita.
+- comandos separados **Cert. usuário** e **Cert. máquina**;
+- preservação do escopo solicitado no resultado, inclusive se o store estiver vazio ou inacessível;
+- abertura de `LocalMachine\MY` somente leitura e sem solicitar elevação;
+- status, lista e resumo identificando explicitamente o store consultado;
+- controles bloqueados durante a thread para impedir resultados concorrentes misturados.
 
 Não entregue:
 
-- afirmação de que a prioridade visual substitui um diagnóstico completo;
-- teste funcional da chave ou do token;
-- filtragem que esconda certificados saudáveis;
-- alteração da ordem ou do conteúdo no store do Windows;
+- tentativa de contornar acesso negado ao store da máquina;
+- solicitação de UAC ou execução automática como administrador;
+- união silenciosa dos resultados de usuário e máquina;
+- importação, remoção ou alteração de certificados;
 - qualificação pendente nas VMs alvo e promoção para release pública.
 
 ## Comando de prova
@@ -86,7 +87,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 64
+100% tests passed, 0 tests failed out of 65
 ```
 
 O empacotamento Release executa a suíte, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.

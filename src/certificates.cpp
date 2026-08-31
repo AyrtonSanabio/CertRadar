@@ -206,6 +206,7 @@ ChainEvaluation evaluate_certificate_chain_online(
 
 CertificateStoreResult enumerate_personal_certificates(const StoreScope scope) {
     CertificateStoreResult result;
+    result.scope = scope;
     const DWORD location = scope == StoreScope::current_user
         ? CERT_SYSTEM_STORE_CURRENT_USER : CERT_SYSTEM_STORE_LOCAL_MACHINE;
     HCERTSTORE store = CertOpenStore(

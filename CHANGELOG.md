@@ -66,3 +66,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Consulta assíncrona dos certificados pessoais instalados no usuário atual pela interface, exibindo somente validade, vínculo aparente com chave, tipo de provider, vencimento e os oito caracteres finais da impressão digital.
 - Resumo copiável dos certificados instalados com contagens por validade, associação de chave e categoria CSP/KSP, sem titular, CPF, emissor, série, impressão digital ou nome completo do provider.
 - Ordenação estável dos certificados instalados por prioridade de suporte: expirados, ainda não válidos, próximos do vencimento, válidos sem chave associada e válidos com chave associada.
+- Consulta separada do store `LocalMachine\MY` pela interface, sem elevação, preservando o escopo em resultados vazios ou com erro e identificando corretamente usuário/máquina no resumo.

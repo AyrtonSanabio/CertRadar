@@ -275,10 +275,11 @@ Esta fase começou após a implementação do roteiro original. Ela integra ao e
 | T048 | Lista na janela os certificados instalados do usuário atual | Store X.509 assíncrono e minimização visual |
 | T049 | Copia contagens sanitizadas dos certificados instalados | Agregação operacional sem identidade |
 | T050 | Ordena certificados instalados por prioridade de suporte | Regra pura, estabilidade e foco operacional |
+| T051 | Consulta separadamente o store Pessoal da máquina | Escopo explícito e falha sem elevação |
 
 ## Tarefa atual
 
-**T050 — Prioridade visual dos certificados instalados, concluída.**
+**T051 — Store Pessoal da máquina na interface, concluída.**
 
 O roteiro T000–T043 permanece preservado. A Fase G reúne integrações incrementais de usabilidade autorizadas pela continuação do desenvolvimento; cada tarefa mantém TDD, documentação e commit próprio.
 

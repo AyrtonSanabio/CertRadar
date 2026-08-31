@@ -197,9 +197,10 @@ std::wstring build_certificate_store_support_summary(
     }
 
     std::wstring summary = L"Resumo CertRadar — certificados instalados\r\n";
-    summary += result.opened
-        ? L"Store Pessoal do usuário: acessível\r\n"
-        : L"Store Pessoal do usuário: indisponível\r\n";
+    const std::wstring store_name = result.scope == StoreScope::current_user
+        ? L"Store Pessoal do usuário"
+        : L"Store Pessoal da máquina";
+    summary += store_name + (result.opened ? L": acessível\r\n" : L": indisponível\r\n");
     summary += L"Certificados instalados: " +
                std::to_wstring(result.certificates.size()) + L"\r\n";
     summary += L"Ainda não válidos: " + std::to_wstring(

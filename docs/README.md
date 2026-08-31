@@ -29,9 +29,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 23. [Certificados instalados na interface](23_CERTIFICADOS_INSTALADOS_NA_INTERFACE.md)
 24. [Resumo sanitizado dos certificados instalados](24_RESUMO_CERTIFICADOS_INSTALADOS.md)
 25. [Prioridade visual dos certificados instalados](25_PRIORIDADE_CERTIFICADOS_INSTALADOS.md)
-26. [Estado da implementação](STATUS.md)
-27. [Glossário](GLOSSARIO.md)
-28. [Referências oficiais](REFERENCIAS.md)
+26. [Store Pessoal da máquina na interface](26_STORE_DA_MAQUINA_NA_INTERFACE.md)
+27. [Estado da implementação](STATUS.md)
+28. [Glossário](GLOSSARIO.md)
+29. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

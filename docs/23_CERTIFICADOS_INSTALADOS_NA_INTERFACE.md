@@ -8,7 +8,7 @@ A T048 torna visível na janela uma capacidade que já existia no núcleo: enume
 
 1. O usuário pressiona **Instalados**.
 2. A interface desabilita temporariamente as ações incompatíveis e inicia uma thread de trabalho.
-3. O núcleo abre o store `CurrentUser\\MY` somente para leitura e enumera os certificados públicos.
+3. O núcleo abre o store `CurrentUser\MY` somente para leitura e enumera os certificados públicos.
 4. A thread publica o resultado de volta para a janela.
 5. A lista mostra uma linha sanitizada por certificado, ou uma mensagem clara quando o store está vazio ou inacessível.
 
@@ -35,7 +35,7 @@ Não são mostrados titular, CPF, emissor, número de série, impressão digital
 - Nenhum PIN, senha, elevação ou consentimento para mutação é solicitado.
 - **Mostrar arquivo** permanece desabilitado nessa visualização, pois um certificado instalado não é um resultado de arquivo PFX/P12.
 - Nesta tarefa, **Copiar resumo** permanecia restrito à busca de arquivos. A T049 posterior adicionou um resumo agregado e sanitizado específico para esta visualização.
-- O store `LocalMachine\\MY` ainda não foi integrado à janela.
+- Nesta tarefa, o store `LocalMachine\MY` ainda não estava integrado à janela. A T051 posterior adicionou uma consulta separada, somente leitura e sem elevação.
 
 ## Prova automatizada
 

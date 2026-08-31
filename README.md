@@ -106,6 +106,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Certificados instalados na interface](docs/23_CERTIFICADOS_INSTALADOS_NA_INTERFACE.md)
 - [Resumo sanitizado dos certificados instalados](docs/24_RESUMO_CERTIFICADOS_INSTALADOS.md)
 - [Prioridade visual dos certificados instalados](docs/25_PRIORIDADE_CERTIFICADOS_INSTALADOS.md)
+- [Store Pessoal da máquina na interface](docs/26_STORE_DA_MAQUINA_NA_INTERFACE.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)
@@ -120,7 +121,7 @@ A arquitetura candidata separa um coletor nativo, restrito e majoritariamente de
 ## Execução
 
 Ainda não existe versão distribuível ou assinada do produto.
-Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela mostra o ambiente detectado e somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, **Copiar resumo** disponibiliza o ambiente e contagens sanitizadas para o chamado, enquanto **Mostrar arquivo** abre a pasta com o candidato selecionado sem executar o PFX/P12. **Instalados** lê, em segundo plano e sem alterar o sistema, os certificados pessoais do usuário atual, coloca situações que exigem atenção primeiro e mostra somente metadados mínimos para suporte; nessa visualização, **Copiar resumo** gera contagens sem identidade ou identificadores completos. Os binários dessa pasta ainda não constituem uma release assinada.
+Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela mostra o ambiente detectado e somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, **Copiar resumo** disponibiliza o ambiente e contagens sanitizadas para o chamado, enquanto **Mostrar arquivo** abre a pasta com o candidato selecionado sem executar o PFX/P12. **Cert. usuário** e **Cert. máquina** leem, em segundo plano e sem alterar o sistema, os respectivos stores Pessoais, colocam situações que exigem atenção primeiro e mostram somente metadados mínimos para suporte; nessa visualização, **Copiar resumo** identifica o escopo e gera contagens sem identidade ou identificadores completos. Os binários dessa pasta ainda não constituem uma release assinada.
 
 ### Executar os testes do checkpoint atual
 

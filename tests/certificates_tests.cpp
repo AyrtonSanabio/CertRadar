@@ -7,6 +7,7 @@ TEST_CASE("current user personal store is enumerated read-only") {
         certradar::StoreScope::current_user);
 
     CHECK(result.opened);
+    CHECK(result.scope == certradar::StoreScope::current_user);
     CHECK(result.error_code == 0);
     for (const auto& certificate : result.certificates) {
         CHECK(certificate.scope == certradar::StoreScope::current_user);
@@ -19,6 +20,7 @@ TEST_CASE("local machine personal store is attempted without elevation") {
         certradar::StoreScope::local_machine);
 
     CHECK((result.opened || result.error_code != 0));
+    CHECK(result.scope == certradar::StoreScope::local_machine);
     for (const auto& certificate : result.certificates) {
         CHECK(certificate.scope == certradar::StoreScope::local_machine);
     }

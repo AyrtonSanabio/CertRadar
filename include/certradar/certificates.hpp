@@ -27,6 +27,7 @@ struct CertificateRecord {
 };
 
 struct CertificateStoreResult {
+    StoreScope scope{StoreScope::current_user};
     bool opened{false};
     unsigned long error_code{0};
     std::vector<CertificateRecord> certificates;

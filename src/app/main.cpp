@@ -31,6 +31,7 @@ constexpr int copy_summary_button_id = 1006;
 constexpr int reveal_candidate_button_id = 1007;
 constexpr int environment_label_id = 1008;
 constexpr int installed_certificates_button_id = 1009;
+constexpr int machine_certificates_button_id = 1010;
 constexpr UINT scan_progress_message = WM_APP + 1;
 constexpr UINT scan_finished_message = WM_APP + 2;
 constexpr UINT certificates_finished_message = WM_APP + 3;
@@ -45,6 +46,7 @@ HWND copy_summary_button = nullptr;
 HWND reveal_candidate_button = nullptr;
 HWND environment_label = nullptr;
 HWND installed_certificates_button = nullptr;
+HWND machine_certificates_button = nullptr;
 std::thread scan_thread;
 std::thread certificate_thread;
 std::unique_ptr<certradar::SearchControl> scan_control;
@@ -89,6 +91,11 @@ void set_scan_controls(const bool running) {
     EnableWindow(pause_button, running ? TRUE : FALSE);
     EnableWindow(cancel_button, running ? TRUE : FALSE);
     EnableWindow(installed_certificates_button, running ? FALSE : TRUE);
+    EnableWindow(machine_certificates_button, running ? FALSE : TRUE);
+}
+
+std::wstring store_owner(const certradar::StoreScope scope) {
+    return scope == certradar::StoreScope::current_user ? L"do usuário" : L"da máquina";
 }
 
 void finish_previous_thread() {
@@ -143,7 +150,7 @@ void start_scan() {
     });
 }
 
-void show_installed_certificates() {
+void show_installed_certificates(const certradar::StoreScope scope) {
     finish_previous_thread();
     finish_certificate_thread();
     result_view = ResultView::installed_certificates;
@@ -152,14 +159,16 @@ void show_installed_certificates() {
     EnableWindow(reveal_candidate_button, FALSE);
     EnableWindow(start_button, FALSE);
     EnableWindow(installed_certificates_button, FALSE);
-    set_status(L"Lendo certificados pessoais do usuário em modo somente leitura...");
+    EnableWindow(machine_certificates_button, FALSE);
+    set_status(L"Lendo certificados pessoais " + store_owner(scope) +
+               L" em modo somente leitura...");
 
-    certificate_thread = std::thread([] {
+    certificate_thread = std::thread([scope] {
         certradar::CertificateStoreResult result;
+        result.scope = scope;
         bool failed = false;
         try {
-            result = certradar::enumerate_personal_certificates(
-                certradar::StoreScope::current_user);
+            result = certradar::enumerate_personal_certificates(scope);
         } catch (...) {
             failed = true;
         }
@@ -182,20 +191,23 @@ void show_installed_certificate_result() {
         failed = certificate_enumeration_failed;
     }
     if (failed) {
-        set_status(L"A leitura do store Pessoal falhou sem alterar certificados.");
+        set_status(L"A leitura do store Pessoal " + store_owner(result.scope) +
+                   L" falhou sem alterar certificados.");
         set_scan_controls(false);
         return;
     }
 
     if (!result.opened) {
-        set_status(L"Não foi possível abrir o store Pessoal. Código: " +
+        set_status(L"Não foi possível abrir o store Pessoal " + store_owner(result.scope) +
+                   L". Código: " +
                    std::to_wstring(result.error_code) + L".");
         set_scan_controls(false);
         return;
     }
 
     if (result.certificates.empty()) {
-        const std::wstring empty = L"Nenhum certificado foi encontrado no store Pessoal do usuário.";
+        const std::wstring empty = L"Nenhum certificado foi encontrado no store Pessoal " +
+                                   store_owner(result.scope) + L".";
         SendMessageW(results_list, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(empty.c_str()));
     } else {
         const auto display_order = certradar::build_certificate_display_order(result);
@@ -206,7 +218,8 @@ void show_installed_certificate_result() {
         }
     }
     set_status(std::to_wstring(result.certificates.size()) +
-               L" certificado(s) no store Pessoal. Situações que exigem atenção aparecem primeiro.");
+               L" certificado(s) no store Pessoal " + store_owner(result.scope) +
+               L". Situações que exigem atenção aparecem primeiro.");
     set_scan_controls(false);
     EnableWindow(copy_summary_button, TRUE);
 }
@@ -356,22 +369,26 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                     control_identifier(environment_label_id), nullptr, nullptr);
             }
             start_button = CreateWindowW(L"BUTTON", L"Iniciar busca", WS_CHILD | WS_VISIBLE,
-                16, 16, 130, 32, window, control_identifier(start_button_id), nullptr, nullptr);
+                16, 16, 110, 32, window, control_identifier(start_button_id), nullptr, nullptr);
             pause_button = CreateWindowW(L"BUTTON", L"Pausar", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-                154, 16, 100, 32, window, control_identifier(pause_button_id), nullptr, nullptr);
+                134, 16, 80, 32, window, control_identifier(pause_button_id), nullptr, nullptr);
             cancel_button = CreateWindowW(L"BUTTON", L"Cancelar", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-                262, 16, 100, 32, window, control_identifier(cancel_button_id), nullptr, nullptr);
+                222, 16, 80, 32, window, control_identifier(cancel_button_id), nullptr, nullptr);
             copy_summary_button = CreateWindowW(
                 L"BUTTON", L"Copiar resumo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-                370, 16, 140, 32, window, control_identifier(copy_summary_button_id), nullptr, nullptr);
+                310, 16, 120, 32, window, control_identifier(copy_summary_button_id), nullptr, nullptr);
             reveal_candidate_button = CreateWindowW(
                 L"BUTTON", L"Mostrar arquivo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-                518, 16, 140, 32, window,
+                438, 16, 125, 32, window,
                 control_identifier(reveal_candidate_button_id), nullptr, nullptr);
             installed_certificates_button = CreateWindowW(
-                L"BUTTON", L"Instalados", WS_CHILD | WS_VISIBLE,
-                666, 16, 110, 32, window,
+                L"BUTTON", L"Cert. usuário", WS_CHILD | WS_VISIBLE,
+                571, 16, 95, 32, window,
                 control_identifier(installed_certificates_button_id), nullptr, nullptr);
+            machine_certificates_button = CreateWindowW(
+                L"BUTTON", L"Cert. máquina", WS_CHILD | WS_VISIBLE,
+                674, 16, 102, 32, window,
+                control_identifier(machine_certificates_button_id), nullptr, nullptr);
             status_label = CreateWindowW(L"STATIC", L"Pronto. A busca só começa com sua autorização.",
                 WS_CHILD | WS_VISIBLE, 16, 84, 740, 42, window,
                 control_identifier(status_label_id), nullptr, nullptr);
@@ -395,7 +412,12 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                     return 0;
                 case copy_summary_button_id: copy_support_summary(); return 0;
                 case reveal_candidate_button_id: reveal_selected_candidate(); return 0;
-                case installed_certificates_button_id: show_installed_certificates(); return 0;
+                case installed_certificates_button_id:
+                    show_installed_certificates(certradar::StoreScope::current_user);
+                    return 0;
+                case machine_certificates_button_id:
+                    show_installed_certificates(certradar::StoreScope::local_machine);
+                    return 0;
                 case results_list_id:
                     if (HIWORD(wparam) == LBN_SELCHANGE) {
                         const auto selection = SendMessageW(results_list, LB_GETCURSEL, 0, 0);
@@ -449,7 +471,7 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int show_command) {
     if (RegisterClassW(&window_class) == 0) return 1;
 
     main_window = CreateWindowExW(
-        0, class_name, L"CertRadar — Busca segura de certificados A1",
+        0, class_name, L"CertRadar — suporte a certificados digitais",
         WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 800, 540,
         nullptr, nullptr, instance, nullptr);
     if (main_window == nullptr) return 1;
