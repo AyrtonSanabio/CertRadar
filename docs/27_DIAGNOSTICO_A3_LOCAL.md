@@ -10,6 +10,8 @@ A T052 leva à janela a primeira parte do diagnóstico de token/cartão A3. O bo
 
 O resultado aparece na lista e pode ser copiado pelo botão **Resumo**.
 
+A T053 posterior acrescentou ao mesmo resultado uma próxima ação derivada somente desses fatos locais.
+
 ## Snapshot local
 
 `inspect_a3_locally` cria um snapshot com:

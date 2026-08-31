@@ -95,6 +95,22 @@ std::wstring smart_card_service_summary(const ServiceState state) {
     return L"estado desconhecido";
 }
 
+std::wstring a3_next_action(const A3LocalTriage triage) {
+    switch (triage) {
+        case A3LocalTriage::service_unavailable:
+            return L"verificar o serviço de cartão inteligente e só iniciá-lo com autorização";
+        case A3LocalTriage::reader_query_failed:
+            return L"registrar o código da consulta e verificar o subsistema WinSCard ou o driver";
+        case A3LocalTriage::reader_missing:
+            return L"verificar conexão, porta USB e instalação do leitor";
+        case A3LocalTriage::device_absent:
+            return L"reconectar o cartão/token e testar outra porta, sem insistir em PIN";
+        case A3LocalTriage::device_detected:
+            return L"prosseguir com middleware, certificado e chave; presença não comprova funcionamento";
+    }
+    return L"coletar mais evidências antes de executar qualquer correção";
+}
+
 }  // namespace
 
 std::wstring candidate_state_label(const CandidateState state) {
@@ -264,7 +280,7 @@ std::wstring build_a3_support_summary(const A3LocalSnapshot& snapshot) {
     std::uint64_t cards_present = 0;
     std::uint64_t unavailable = 0;
     for (const auto& reader : snapshot.readers.readers) {
-        if (reader.card_present) ++cards_present;
+        if (reader.card_present && !reader.unavailable) ++cards_present;
         if (reader.unavailable) ++unavailable;
     }
 
@@ -282,6 +298,8 @@ std::wstring build_a3_support_summary(const A3LocalSnapshot& snapshot) {
         summary += L"Cartões/tokens presentes: " + std::to_wstring(cards_present) + L"\r\n";
         summary += L"Leitores indisponíveis: " + std::to_wstring(unavailable) + L"\r\n";
     }
+    summary += L"Próxima ação: " +
+               a3_next_action(classify_a3_local_snapshot(snapshot)) + L".\r\n";
     summary += L"Privacidade: nomes de leitores não foram incluídos; nenhuma sessão, chave ou tentativa de PIN foi usada.\r\n";
     return summary;
 }

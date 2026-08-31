@@ -57,25 +57,26 @@ Atualizado em 31 de agosto de 2026.
 | T050 — Prioridade visual dos certificados instalados | Concluída | Problemas aparecem antes das credenciais saudáveis; 64 testes x64/Win32 |
 | T051 — Store Pessoal da máquina na interface | Concluída | Usuário/máquina separados sem elevação; 65 testes x64/Win32 |
 | T052 — Diagnóstico A3 local na interface | Concluída | Serviço/leitores/dispositivo sem nomes nem PIN; 67 testes x64/Win32 |
+| T053 — Orientação A3 por evidência local | Concluída | Próxima ação limitada ao estado observável; 68 testes x64/Win32 |
 
 ## Tarefa em revisão
 
-### T052 — Diagnóstico A3 local na interface
+### T053 — Orientação A3 por evidência local
 
 Entregue:
 
-- botão **A3 local** com execução em thread de trabalho;
-- consulta do serviço `SCardSvr` sem alteração de estado;
-- enumeração de leitores somente quando o serviço já está em execução;
-- contagens de leitores, dispositivos presentes e leitores indisponíveis;
-- resumo copiável sem nomes de leitor, sessão de cartão, chave ou tentativa de PIN.
+- classificador puro com cinco estados locais observáveis;
+- serviço indisponível separado de falha na consulta WinSCard;
+- ausência de leitor separada de leitor sem cartão/token;
+- dispositivo detectado sem alegar middleware, certificado ou chave funcionais;
+- próxima ação incluída na lista e no resumo copiável existente.
 
 Não entregue:
 
-- diagnóstico de middleware/provider e associação de chave nesta tela;
+- execução automática da ação recomendada;
+- conclusão de que o token está pronto apenas por estar presente;
+- diagnóstico de middleware/provider ou associação de chave sem fatos adicionais;
 - prova funcional de assinatura com A3 real;
-- início automático do serviço de cartão inteligente;
-- abertura de sessão, transação ou solicitação de PIN;
 - qualificação pendente nas VMs alvo e promoção para release pública.
 
 ## Comando de prova
@@ -88,7 +89,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 67
+100% tests passed, 0 tests failed out of 68
 ```
 
 O empacotamento Release executa a suíte, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.

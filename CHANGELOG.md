@@ -68,3 +68,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Ordenação estável dos certificados instalados por prioridade de suporte: expirados, ainda não válidos, próximos do vencimento, válidos sem chave associada e válidos com chave associada.
 - Consulta separada do store `LocalMachine\MY` pela interface, sem elevação, preservando o escopo em resultados vazios ou com erro e identificando corretamente usuário/máquina no resumo.
 - Diagnóstico A3 local assíncrono na interface, mostrando serviço, contagem de leitores, cartões/tokens presentes e leitores indisponíveis sem nomes de dispositivos, sessão de cartão ou tentativa de PIN.
+- Orientação de próxima ação para o diagnóstico A3 local, preservando separadamente serviço indisponível, falha WinSCard, leitor ausente, dispositivo ausente e dispositivo detectado ainda pendente de middleware/chave.

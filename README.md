@@ -108,6 +108,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Prioridade visual dos certificados instalados](docs/25_PRIORIDADE_CERTIFICADOS_INSTALADOS.md)
 - [Store Pessoal da máquina na interface](docs/26_STORE_DA_MAQUINA_NA_INTERFACE.md)
 - [Diagnóstico A3 local na interface](docs/27_DIAGNOSTICO_A3_LOCAL.md)
+- [Orientação A3 por evidência local](docs/28_ORIENTACAO_A3_LOCAL.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)

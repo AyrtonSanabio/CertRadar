@@ -115,6 +115,24 @@ A3LocalSnapshot inspect_a3_locally() {
     return snapshot;
 }
 
+A3LocalTriage classify_a3_local_snapshot(const A3LocalSnapshot& snapshot) noexcept {
+    if (snapshot.service.state != ServiceState::running) {
+        return A3LocalTriage::service_unavailable;
+    }
+    if (!snapshot.readers_queried || !snapshot.readers.success) {
+        return A3LocalTriage::reader_query_failed;
+    }
+    if (snapshot.readers.readers.empty()) {
+        return A3LocalTriage::reader_missing;
+    }
+    for (const auto& reader : snapshot.readers.readers) {
+        if (reader.card_present && !reader.unavailable) {
+            return A3LocalTriage::device_detected;
+        }
+    }
+    return A3LocalTriage::device_absent;
+}
+
 A3State diagnose_a3_state(const A3Evidence& evidence) noexcept {
     if (evidence.service != ServiceState::running) return A3State::service_unavailable;
     if (!evidence.reader_detected) return A3State::reader_missing;

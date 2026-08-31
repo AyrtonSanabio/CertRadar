@@ -32,6 +32,14 @@ struct A3LocalSnapshot {
     ReaderEnumeration readers;
 };
 
+enum class A3LocalTriage {
+    service_unavailable,
+    reader_query_failed,
+    reader_missing,
+    device_absent,
+    device_detected
+};
+
 enum class A3State {
     service_unavailable,
     reader_missing,
@@ -52,6 +60,7 @@ struct A3Evidence {
 SmartCardService query_smart_card_service();
 ReaderEnumeration enumerate_smart_card_readers();
 A3LocalSnapshot inspect_a3_locally();
+A3LocalTriage classify_a3_local_snapshot(const A3LocalSnapshot& snapshot) noexcept;
 A3State diagnose_a3_state(const A3Evidence& evidence) noexcept;
 
 }  // namespace certradar
