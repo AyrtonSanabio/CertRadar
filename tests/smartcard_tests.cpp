@@ -17,6 +17,18 @@ TEST_CASE("reader enumeration does not require a card or consume a PIN attempt")
     for (const auto& reader : result.readers) CHECK_FALSE(reader.name.empty());
 }
 
+TEST_CASE("A3 local inspection only queries readers when the service is running") {
+    const auto snapshot = certradar::inspect_a3_locally();
+
+    CHECK(snapshot.readers_queried ==
+          (snapshot.service.state == certradar::ServiceState::running));
+    if (snapshot.readers_queried) {
+        CHECK((snapshot.readers.success || snapshot.readers.error_code != 0));
+    } else {
+        CHECK(snapshot.readers.readers.empty());
+    }
+}
+
 TEST_CASE("A3 diagnosis keeps service reader device middleware and key as separate states") {
     certradar::A3Evidence evidence;
     CHECK(certradar::diagnose_a3_state(evidence) == certradar::A3State::service_unavailable);

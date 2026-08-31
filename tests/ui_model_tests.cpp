@@ -216,3 +216,27 @@ TEST_CASE("certificate store summary identifies the selected Windows scope") {
     CHECK(summary.find(L"Store Pessoal da máquina: acessível") != std::wstring::npos);
     CHECK(summary.find(L"Store Pessoal do usuário") == std::wstring::npos);
 }
+
+TEST_CASE("A3 local summary reports counts without reader names") {
+    certradar::A3LocalSnapshot snapshot;
+    snapshot.service.state = certradar::ServiceState::running;
+    snapshot.readers_queried = true;
+    snapshot.readers.success = true;
+    snapshot.readers.readers = {
+        {L"Leitor confidencial 12345678900", true, false, 0},
+        {L"Token pessoal Maria", false, true, 0},
+    };
+
+    certradar::WindowsPlatform platform{10, 0, 19045};
+    platform.architecture = "x64";
+    const auto summary = certradar::build_a3_support_summary(snapshot, platform);
+
+    CHECK(summary.find(L"Serviço de cartão inteligente: em execução") != std::wstring::npos);
+    CHECK(summary.find(L"Leitores detectados: 2") != std::wstring::npos);
+    CHECK(summary.find(L"Cartões/tokens presentes: 1") != std::wstring::npos);
+    CHECK(summary.find(L"Leitores indisponíveis: 1") != std::wstring::npos);
+    CHECK(summary.find(L"Windows 10") != std::wstring::npos);
+    CHECK(summary.find(L"Leitor confidencial") == std::wstring::npos);
+    CHECK(summary.find(L"12345678900") == std::wstring::npos);
+    CHECK(summary.find(L"Token pessoal Maria") == std::wstring::npos);
+}

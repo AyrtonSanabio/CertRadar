@@ -9,6 +9,7 @@
 #include "certradar/search.hpp"
 #include "certradar/search_plan.hpp"
 #include "certradar/platform.hpp"
+#include "certradar/smartcard.hpp"
 #include "certradar/ui_model.hpp"
 
 #include <cstdint>
@@ -32,9 +33,11 @@ constexpr int reveal_candidate_button_id = 1007;
 constexpr int environment_label_id = 1008;
 constexpr int installed_certificates_button_id = 1009;
 constexpr int machine_certificates_button_id = 1010;
+constexpr int a3_local_button_id = 1011;
 constexpr UINT scan_progress_message = WM_APP + 1;
 constexpr UINT scan_finished_message = WM_APP + 2;
 constexpr UINT certificates_finished_message = WM_APP + 3;
+constexpr UINT a3_finished_message = WM_APP + 4;
 
 HWND main_window = nullptr;
 HWND start_button = nullptr;
@@ -47,18 +50,23 @@ HWND reveal_candidate_button = nullptr;
 HWND environment_label = nullptr;
 HWND installed_certificates_button = nullptr;
 HWND machine_certificates_button = nullptr;
+HWND a3_local_button = nullptr;
 std::thread scan_thread;
 std::thread certificate_thread;
+std::thread a3_thread;
 std::unique_ptr<certradar::SearchControl> scan_control;
 std::mutex result_mutex;
 certradar::SearchResult completed_result;
 std::mutex certificate_mutex;
 certradar::CertificateStoreResult completed_certificates;
 bool certificate_enumeration_failed = false;
+std::mutex a3_mutex;
+certradar::A3LocalSnapshot completed_a3_snapshot;
+bool a3_inspection_failed = false;
 bool shell_actions_available = false;
 std::optional<certradar::WindowsPlatform> detected_platform;
 
-enum class ResultView : std::uint8_t { search_candidates, installed_certificates };
+enum class ResultView : std::uint8_t { search_candidates, installed_certificates, a3_local };
 ResultView result_view = ResultView::search_candidates;
 
 class ComApartment final {
@@ -92,6 +100,7 @@ void set_scan_controls(const bool running) {
     EnableWindow(cancel_button, running ? TRUE : FALSE);
     EnableWindow(installed_certificates_button, running ? FALSE : TRUE);
     EnableWindow(machine_certificates_button, running ? FALSE : TRUE);
+    EnableWindow(a3_local_button, running ? FALSE : TRUE);
 }
 
 std::wstring store_owner(const certradar::StoreScope scope) {
@@ -106,9 +115,14 @@ void finish_certificate_thread() {
     if (certificate_thread.joinable()) certificate_thread.join();
 }
 
+void finish_a3_thread() {
+    if (a3_thread.joinable()) a3_thread.join();
+}
+
 void start_scan() {
     finish_previous_thread();
     finish_certificate_thread();
+    finish_a3_thread();
     result_view = ResultView::search_candidates;
     SendMessageW(results_list, LB_RESETCONTENT, 0, 0);
     set_status(L"Preparando busca local...");
@@ -153,6 +167,7 @@ void start_scan() {
 void show_installed_certificates(const certradar::StoreScope scope) {
     finish_previous_thread();
     finish_certificate_thread();
+    finish_a3_thread();
     result_view = ResultView::installed_certificates;
     SendMessageW(results_list, LB_RESETCONTENT, 0, 0);
     EnableWindow(copy_summary_button, FALSE);
@@ -160,6 +175,7 @@ void show_installed_certificates(const certradar::StoreScope scope) {
     EnableWindow(start_button, FALSE);
     EnableWindow(installed_certificates_button, FALSE);
     EnableWindow(machine_certificates_button, FALSE);
+    EnableWindow(a3_local_button, FALSE);
     set_status(L"Lendo certificados pessoais " + store_owner(scope) +
                L" em modo somente leitura...");
 
@@ -220,6 +236,77 @@ void show_installed_certificate_result() {
     set_status(std::to_wstring(result.certificates.size()) +
                L" certificado(s) no store Pessoal " + store_owner(result.scope) +
                L". Situações que exigem atenção aparecem primeiro.");
+    set_scan_controls(false);
+    EnableWindow(copy_summary_button, TRUE);
+}
+
+void add_summary_lines(const std::wstring& summary) {
+    std::size_t position = 0;
+    while (position < summary.size()) {
+        const auto end = summary.find(L"\r\n", position);
+        const auto count = end == std::wstring::npos ? summary.size() - position : end - position;
+        if (count > 0) {
+            const auto line = summary.substr(position, count);
+            SendMessageW(results_list, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(line.c_str()));
+        }
+        if (end == std::wstring::npos) break;
+        position = end + 2;
+    }
+}
+
+void show_a3_local() {
+    finish_previous_thread();
+    finish_certificate_thread();
+    finish_a3_thread();
+    result_view = ResultView::a3_local;
+    SendMessageW(results_list, LB_RESETCONTENT, 0, 0);
+    EnableWindow(copy_summary_button, FALSE);
+    EnableWindow(reveal_candidate_button, FALSE);
+    EnableWindow(start_button, FALSE);
+    EnableWindow(pause_button, FALSE);
+    EnableWindow(cancel_button, FALSE);
+    EnableWindow(installed_certificates_button, FALSE);
+    EnableWindow(machine_certificates_button, FALSE);
+    EnableWindow(a3_local_button, FALSE);
+    set_status(L"Verificando serviço e leitores A3 sem abrir sessão no dispositivo...");
+
+    a3_thread = std::thread([] {
+        certradar::A3LocalSnapshot snapshot;
+        bool failed = false;
+        try {
+            snapshot = certradar::inspect_a3_locally();
+        } catch (...) {
+            failed = true;
+        }
+        {
+            const std::lock_guard<std::mutex> lock(a3_mutex);
+            completed_a3_snapshot = std::move(snapshot);
+            a3_inspection_failed = failed;
+        }
+        PostMessageW(main_window, a3_finished_message, 0, 0);
+    });
+}
+
+void show_a3_result() {
+    finish_a3_thread();
+    certradar::A3LocalSnapshot snapshot;
+    bool failed = false;
+    {
+        const std::lock_guard<std::mutex> lock(a3_mutex);
+        snapshot = completed_a3_snapshot;
+        failed = a3_inspection_failed;
+    }
+    if (failed) {
+        set_status(L"O diagnóstico A3 local falhou sem abrir sessão nem alterar o sistema.");
+        set_scan_controls(false);
+        return;
+    }
+
+    const auto summary = detected_platform.has_value()
+        ? certradar::build_a3_support_summary(snapshot, *detected_platform)
+        : certradar::build_a3_support_summary(snapshot);
+    add_summary_lines(summary);
+    set_status(L"Diagnóstico A3 local concluído. Nenhuma sessão ou tentativa de PIN foi usada.");
     set_scan_controls(false);
     EnableWindow(copy_summary_button, TRUE);
 }
@@ -291,7 +378,16 @@ bool copy_unicode_text_to_clipboard(const std::wstring& text) {
 
 void copy_support_summary() {
     std::wstring summary;
-    if (result_view == ResultView::installed_certificates) {
+    if (result_view == ResultView::a3_local) {
+        certradar::A3LocalSnapshot snapshot;
+        {
+            const std::lock_guard<std::mutex> lock(a3_mutex);
+            snapshot = completed_a3_snapshot;
+        }
+        summary = detected_platform.has_value()
+            ? certradar::build_a3_support_summary(snapshot, *detected_platform)
+            : certradar::build_a3_support_summary(snapshot);
+    } else if (result_view == ResultView::installed_certificates) {
         certradar::CertificateStoreResult result;
         {
             const std::lock_guard<std::mutex> lock(certificate_mutex);
@@ -369,26 +465,30 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                     control_identifier(environment_label_id), nullptr, nullptr);
             }
             start_button = CreateWindowW(L"BUTTON", L"Iniciar busca", WS_CHILD | WS_VISIBLE,
-                16, 16, 110, 32, window, control_identifier(start_button_id), nullptr, nullptr);
+                16, 16, 95, 32, window, control_identifier(start_button_id), nullptr, nullptr);
             pause_button = CreateWindowW(L"BUTTON", L"Pausar", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-                134, 16, 80, 32, window, control_identifier(pause_button_id), nullptr, nullptr);
+                119, 16, 68, 32, window, control_identifier(pause_button_id), nullptr, nullptr);
             cancel_button = CreateWindowW(L"BUTTON", L"Cancelar", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-                222, 16, 80, 32, window, control_identifier(cancel_button_id), nullptr, nullptr);
+                195, 16, 72, 32, window, control_identifier(cancel_button_id), nullptr, nullptr);
             copy_summary_button = CreateWindowW(
-                L"BUTTON", L"Copiar resumo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-                310, 16, 120, 32, window, control_identifier(copy_summary_button_id), nullptr, nullptr);
+                L"BUTTON", L"Resumo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
+                275, 16, 100, 32, window, control_identifier(copy_summary_button_id), nullptr, nullptr);
             reveal_candidate_button = CreateWindowW(
-                L"BUTTON", L"Mostrar arquivo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-                438, 16, 125, 32, window,
+                L"BUTTON", L"Arquivo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
+                383, 16, 88, 32, window,
                 control_identifier(reveal_candidate_button_id), nullptr, nullptr);
             installed_certificates_button = CreateWindowW(
                 L"BUTTON", L"Cert. usuário", WS_CHILD | WS_VISIBLE,
-                571, 16, 95, 32, window,
+                479, 16, 90, 32, window,
                 control_identifier(installed_certificates_button_id), nullptr, nullptr);
             machine_certificates_button = CreateWindowW(
                 L"BUTTON", L"Cert. máquina", WS_CHILD | WS_VISIBLE,
-                674, 16, 102, 32, window,
+                577, 16, 92, 32, window,
                 control_identifier(machine_certificates_button_id), nullptr, nullptr);
+            a3_local_button = CreateWindowW(
+                L"BUTTON", L"A3 local", WS_CHILD | WS_VISIBLE,
+                677, 16, 99, 32, window,
+                control_identifier(a3_local_button_id), nullptr, nullptr);
             status_label = CreateWindowW(L"STATIC", L"Pronto. A busca só começa com sua autorização.",
                 WS_CHILD | WS_VISIBLE, 16, 84, 740, 42, window,
                 control_identifier(status_label_id), nullptr, nullptr);
@@ -418,6 +518,7 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                 case machine_certificates_button_id:
                     show_installed_certificates(certradar::StoreScope::local_machine);
                     return 0;
+                case a3_local_button_id: show_a3_local(); return 0;
                 case results_list_id:
                     if (HIWORD(wparam) == LBN_SELCHANGE) {
                         const auto selection = SendMessageW(results_list, LB_GETCURSEL, 0, 0);
@@ -440,10 +541,14 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
         case certificates_finished_message:
             show_installed_certificate_result();
             return 0;
+        case a3_finished_message:
+            show_a3_result();
+            return 0;
         case WM_DESTROY:
             if (scan_control) scan_control->cancel();
             finish_previous_thread();
             finish_certificate_thread();
+            finish_a3_thread();
             PostQuitMessage(0);
             return 0;
         default:

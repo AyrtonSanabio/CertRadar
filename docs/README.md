@@ -30,9 +30,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 24. [Resumo sanitizado dos certificados instalados](24_RESUMO_CERTIFICADOS_INSTALADOS.md)
 25. [Prioridade visual dos certificados instalados](25_PRIORIDADE_CERTIFICADOS_INSTALADOS.md)
 26. [Store Pessoal da máquina na interface](26_STORE_DA_MAQUINA_NA_INTERFACE.md)
-27. [Estado da implementação](STATUS.md)
-28. [Glossário](GLOSSARIO.md)
-29. [Referências oficiais](REFERENCIAS.md)
+27. [Diagnóstico A3 local na interface](27_DIAGNOSTICO_A3_LOCAL.md)
+28. [Estado da implementação](STATUS.md)
+29. [Glossário](GLOSSARIO.md)
+30. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

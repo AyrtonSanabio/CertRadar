@@ -105,6 +105,16 @@ ReaderEnumeration enumerate_smart_card_readers() {
     return result;
 }
 
+A3LocalSnapshot inspect_a3_locally() {
+    A3LocalSnapshot snapshot;
+    snapshot.service = query_smart_card_service();
+    if (snapshot.service.state == ServiceState::running) {
+        snapshot.readers_queried = true;
+        snapshot.readers = enumerate_smart_card_readers();
+    }
+    return snapshot;
+}
+
 A3State diagnose_a3_state(const A3Evidence& evidence) noexcept {
     if (evidence.service != ServiceState::running) return A3State::service_unavailable;
     if (!evidence.reader_detected) return A3State::reader_missing;

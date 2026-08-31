@@ -276,10 +276,11 @@ Esta fase começou após a implementação do roteiro original. Ela integra ao e
 | T049 | Copia contagens sanitizadas dos certificados instalados | Agregação operacional sem identidade |
 | T050 | Ordena certificados instalados por prioridade de suporte | Regra pura, estabilidade e foco operacional |
 | T051 | Consulta separadamente o store Pessoal da máquina | Escopo explícito e falha sem elevação |
+| T052 | Mostra diagnóstico A3 local sanitizado | Serviço, leitores e dispositivo sem PIN |
 
 ## Tarefa atual
 
-**T051 — Store Pessoal da máquina na interface, concluída.**
+**T052 — Diagnóstico A3 local na interface, concluída.**
 
 O roteiro T000–T043 permanece preservado. A Fase G reúne integrações incrementais de usabilidade autorizadas pela continuação do desenvolvimento; cada tarefa mantém TDD, documentação e commit próprio.
 

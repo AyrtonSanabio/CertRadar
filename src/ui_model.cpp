@@ -83,6 +83,18 @@ int certificate_support_priority(const CertificateRecord& certificate) noexcept 
     return 5;
 }
 
+std::wstring smart_card_service_summary(const ServiceState state) {
+    switch (state) {
+        case ServiceState::running: return L"em execução";
+        case ServiceState::stopped: return L"parado";
+        case ServiceState::pending: return L"alterando estado";
+        case ServiceState::missing: return L"não encontrado";
+        case ServiceState::inaccessible: return L"inacessível";
+        case ServiceState::unknown: return L"estado desconhecido";
+    }
+    return L"estado desconhecido";
+}
+
 }  // namespace
 
 std::wstring candidate_state_label(const CandidateState state) {
@@ -246,6 +258,42 @@ std::vector<std::size_t> build_certificate_display_order(
                certificate_support_priority(result.certificates[right]);
     });
     return order;
+}
+
+std::wstring build_a3_support_summary(const A3LocalSnapshot& snapshot) {
+    std::uint64_t cards_present = 0;
+    std::uint64_t unavailable = 0;
+    for (const auto& reader : snapshot.readers.readers) {
+        if (reader.card_present) ++cards_present;
+        if (reader.unavailable) ++unavailable;
+    }
+
+    std::wstring summary = L"Resumo CertRadar — diagnóstico A3 local\r\n";
+    summary += L"Serviço de cartão inteligente: " +
+               smart_card_service_summary(snapshot.service.state) + L"\r\n";
+    if (!snapshot.readers_queried) {
+        summary += L"Leitores: não consultados porque o serviço não está em execução\r\n";
+    } else if (!snapshot.readers.success) {
+        summary += L"Leitores: consulta indisponível; código " +
+                   std::to_wstring(snapshot.readers.error_code) + L"\r\n";
+    } else {
+        summary += L"Leitores detectados: " +
+                   std::to_wstring(snapshot.readers.readers.size()) + L"\r\n";
+        summary += L"Cartões/tokens presentes: " + std::to_wstring(cards_present) + L"\r\n";
+        summary += L"Leitores indisponíveis: " + std::to_wstring(unavailable) + L"\r\n";
+    }
+    summary += L"Privacidade: nomes de leitores não foram incluídos; nenhuma sessão, chave ou tentativa de PIN foi usada.\r\n";
+    return summary;
+}
+
+std::wstring build_a3_support_summary(
+    const A3LocalSnapshot& snapshot,
+    const WindowsPlatform& platform) {
+    auto summary = build_a3_support_summary(snapshot);
+    const auto first_line = summary.find(L"\r\n");
+    const auto insertion = first_line == std::wstring::npos ? summary.size() : first_line + 2;
+    summary.insert(insertion, format_platform_summary(platform) + L"\r\n");
+    return summary;
 }
 
 }  // namespace certradar

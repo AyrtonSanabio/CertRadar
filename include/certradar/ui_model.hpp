@@ -3,6 +3,7 @@
 #include "certradar/certificates.hpp"
 #include "certradar/platform.hpp"
 #include "certradar/search.hpp"
+#include "certradar/smartcard.hpp"
 
 #include <string>
 #include <vector>
@@ -36,5 +37,9 @@ std::wstring build_certificate_store_support_summary(
     const WindowsPlatform& platform);
 std::vector<std::size_t> build_certificate_display_order(
     const CertificateStoreResult& result);
+std::wstring build_a3_support_summary(const A3LocalSnapshot& snapshot);
+std::wstring build_a3_support_summary(
+    const A3LocalSnapshot& snapshot,
+    const WindowsPlatform& platform);
 
 }  // namespace certradar

@@ -56,25 +56,26 @@ Atualizado em 31 de agosto de 2026.
 | T049 — Resumo sanitizado dos certificados instalados | Concluída | Contagens sem identidade nem identificadores completos; 63 testes x64/Win32 |
 | T050 — Prioridade visual dos certificados instalados | Concluída | Problemas aparecem antes das credenciais saudáveis; 64 testes x64/Win32 |
 | T051 — Store Pessoal da máquina na interface | Concluída | Usuário/máquina separados sem elevação; 65 testes x64/Win32 |
+| T052 — Diagnóstico A3 local na interface | Concluída | Serviço/leitores/dispositivo sem nomes nem PIN; 67 testes x64/Win32 |
 
 ## Tarefa em revisão
 
-### T051 — Store Pessoal da máquina na interface
+### T052 — Diagnóstico A3 local na interface
 
 Entregue:
 
-- comandos separados **Cert. usuário** e **Cert. máquina**;
-- preservação do escopo solicitado no resultado, inclusive se o store estiver vazio ou inacessível;
-- abertura de `LocalMachine\MY` somente leitura e sem solicitar elevação;
-- status, lista e resumo identificando explicitamente o store consultado;
-- controles bloqueados durante a thread para impedir resultados concorrentes misturados.
+- botão **A3 local** com execução em thread de trabalho;
+- consulta do serviço `SCardSvr` sem alteração de estado;
+- enumeração de leitores somente quando o serviço já está em execução;
+- contagens de leitores, dispositivos presentes e leitores indisponíveis;
+- resumo copiável sem nomes de leitor, sessão de cartão, chave ou tentativa de PIN.
 
 Não entregue:
 
-- tentativa de contornar acesso negado ao store da máquina;
-- solicitação de UAC ou execução automática como administrador;
-- união silenciosa dos resultados de usuário e máquina;
-- importação, remoção ou alteração de certificados;
+- diagnóstico de middleware/provider e associação de chave nesta tela;
+- prova funcional de assinatura com A3 real;
+- início automático do serviço de cartão inteligente;
+- abertura de sessão, transação ou solicitação de PIN;
 - qualificação pendente nas VMs alvo e promoção para release pública.
 
 ## Comando de prova
@@ -87,7 +88,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 65
+100% tests passed, 0 tests failed out of 67
 ```
 
 O empacotamento Release executa a suíte, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.
