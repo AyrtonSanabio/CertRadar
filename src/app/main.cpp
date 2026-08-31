@@ -8,6 +8,7 @@
 #include "certradar/search_plan.hpp"
 #include "certradar/ui_model.hpp"
 
+#include <cstring>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -21,6 +22,7 @@ constexpr int pause_button_id = 1002;
 constexpr int cancel_button_id = 1003;
 constexpr int results_list_id = 1004;
 constexpr int status_label_id = 1005;
+constexpr int copy_summary_button_id = 1006;
 constexpr UINT scan_progress_message = WM_APP + 1;
 constexpr UINT scan_finished_message = WM_APP + 2;
 
@@ -30,6 +32,7 @@ HWND pause_button = nullptr;
 HWND cancel_button = nullptr;
 HWND results_list = nullptr;
 HWND status_label = nullptr;
+HWND copy_summary_button = nullptr;
 std::thread scan_thread;
 std::unique_ptr<certradar::SearchControl> scan_control;
 std::mutex result_mutex;
@@ -58,6 +61,7 @@ void start_scan() {
     SendMessageW(results_list, LB_RESETCONTENT, 0, 0);
     set_status(L"Preparando busca local...");
     set_scan_controls(true);
+    EnableWindow(copy_summary_button, FALSE);
     SetWindowTextW(pause_button, L"Pausar");
     scan_control = std::make_unique<certradar::SearchControl>();
     auto* const control = scan_control.get();
@@ -93,6 +97,51 @@ void start_scan() {
     });
 }
 
+bool copy_unicode_text_to_clipboard(const std::wstring& text) {
+    const auto bytes = (text.size() + 1) * sizeof(wchar_t);
+    HGLOBAL memory = GlobalAlloc(GMEM_MOVEABLE, bytes);
+    if (memory == nullptr) return false;
+
+    void* const destination = GlobalLock(memory);
+    if (destination == nullptr) {
+        GlobalFree(memory);
+        return false;
+    }
+    std::memcpy(destination, text.c_str(), bytes);
+    GlobalUnlock(memory);
+
+    if (OpenClipboard(main_window) == FALSE) {
+        GlobalFree(memory);
+        return false;
+    }
+    if (EmptyClipboard() == FALSE) {
+        GlobalFree(memory);
+        CloseClipboard();
+        return false;
+    }
+    if (SetClipboardData(CF_UNICODETEXT, memory) == nullptr) {
+        GlobalFree(memory);
+        CloseClipboard();
+        return false;
+    }
+    CloseClipboard();
+    return true;
+}
+
+void copy_search_summary() {
+    certradar::SearchResult result;
+    {
+        const std::lock_guard<std::mutex> lock(result_mutex);
+        result = completed_result;
+    }
+    const auto summary = certradar::build_search_support_summary(result);
+    if (copy_unicode_text_to_clipboard(summary)) {
+        set_status(L"Resumo sanitizado copiado. Ele não contém nomes nem caminhos locais.");
+    } else {
+        set_status(L"Não foi possível acessar a área de transferência. Tente novamente.");
+    }
+}
+
 void pause_or_resume() {
     if (!scan_control) return;
     if (scan_control->is_paused()) {
@@ -123,6 +172,7 @@ void show_completed_result() {
         std::to_wstring(result.access_denied_count) + L" pasta(s) sem acesso. Nenhum arquivo foi alterado.";
     set_status(status);
     set_scan_controls(false);
+    EnableWindow(copy_summary_button, TRUE);
 }
 
 LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
@@ -134,6 +184,9 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                 154, 16, 100, 32, window, control_identifier(pause_button_id), nullptr, nullptr);
             cancel_button = CreateWindowW(L"BUTTON", L"Cancelar", WS_CHILD | WS_VISIBLE | WS_DISABLED,
                 262, 16, 100, 32, window, control_identifier(cancel_button_id), nullptr, nullptr);
+            copy_summary_button = CreateWindowW(
+                L"BUTTON", L"Copiar resumo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
+                370, 16, 140, 32, window, control_identifier(copy_summary_button_id), nullptr, nullptr);
             status_label = CreateWindowW(L"STATIC", L"Pronto. A busca só começa com sua autorização.",
                 WS_CHILD | WS_VISIBLE, 16, 58, 740, 42, window,
                 control_identifier(status_label_id), nullptr, nullptr);
@@ -154,6 +207,7 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                     if (scan_control) scan_control->cancel();
                     set_status(L"Cancelamento solicitado...");
                     return 0;
+                case copy_summary_button_id: copy_search_summary(); return 0;
                 default:
                     break;
             }

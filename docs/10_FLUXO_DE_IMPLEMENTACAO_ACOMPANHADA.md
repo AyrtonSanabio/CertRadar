@@ -262,11 +262,19 @@ Os números reservam uma ordem de estudo. Eles poderão ser divididos, mas não 
 | T042 | Auditoria de privacidade confirma ausência de segredos | Segurança de relatórios e logs |
 | T043 | Release candidate reproduzível e documentada | Processo de release |
 
+### Fase G — Usabilidade operacional
+
+Esta fase começou após a implementação do roteiro original. Ela integra ao executável comportamentos já existentes no núcleo sem enfraquecer os portões de release da Fase F.
+
+| Tarefa | Entrega observável | Conceito principal para estudo |
+|---|---|---|
+| T044 | Copia um resumo sanitizado da busca para o chamado | Fronteira entre dado local e dado compartilhável |
+
 ## Tarefa atual
 
-**T000 — Aprovação da especificação e do fluxo de implementação.**
+**T044 — Resumo sanitizado da busca, concluída.**
 
-Nenhum código de produção será iniciado enquanto T000 não for aprovado. Após a aprovação, o primeiro trabalho de código será exclusivamente a T001.
+O roteiro T000–T043 permanece preservado. A Fase G reúne integrações incrementais de usabilidade autorizadas pela continuação do desenvolvimento; cada tarefa mantém TDD, documentação e commit próprio.
 
 ## Alteração deste plano
 

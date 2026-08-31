@@ -59,3 +59,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Campanhas determinísticas com 10.500 entradas hostis e análise `clang-tidy` dos 16 fontes modernos; a revisão removeu garantias `noexcept` inseguras e explicitou ramos padrão na janela Win32.
 - Sanitização defensiva das saídas de suporte e auditoria automatizada de privacidade, recusando credenciais versionadas, exportação de chaves, uploads, processos arbitrários e persistência inesperada no código moderno.
 - Gate de release candidate que enumera bloqueios externos (VMs qualificadas, A3 real, licença, assinatura de código, pacotes atuais e árvore limpa) sem transformar ausência de evidência em aprovação.
+- Botão de cópia do resumo da busca para o chamado, contendo somente estado e contagens; nomes de arquivos e caminhos locais permanecem exclusivamente na interface da máquina atendida.

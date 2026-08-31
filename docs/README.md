@@ -22,9 +22,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 16. [Hardening e análise estática](16_HARDENING.md)
 17. [Auditoria de privacidade](17_AUDITORIA_DE_PRIVACIDADE.md)
 18. [Gate de release candidate](18_RELEASE_CANDIDATE.md)
-19. [Estado da implementação](STATUS.md)
-20. [Glossário](GLOSSARIO.md)
-21. [Referências oficiais](REFERENCIAS.md)
+19. [Resumo sanitizado da busca](19_RESUMO_SANITIZADO_DA_BUSCA.md)
+20. [Estado da implementação](STATUS.md)
+21. [Glossário](GLOSSARIO.md)
+22. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

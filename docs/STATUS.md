@@ -48,28 +48,26 @@ Atualizado em 30 de agosto de 2026.
 | T041 — Fuzzing e análise estática | Concluída | 10.500 mutações determinísticas, 56 testes x64/Win32 e clang-tidy em 16 fontes |
 | T042 — Auditoria de privacidade | Concluída | Sentinelas redigidos, 58 testes x64/Win32 e auditoria de APIs/arquivos |
 | T043 — Release candidate reproduzível | Bloqueada por portões externos | VMs, A3 real, licença e assinatura de código pendentes |
+| T044 — Resumo sanitizado da busca | Concluída | Resumo sem nomes/caminhos e 59 testes aprovados em x64/Win32 |
 
 ## Tarefa em revisão
 
-### T001 — Estrutura mínima e primeiro teste
+### T044 — Resumo sanitizado da busca
 
 Entregue:
 
-- declaração pública mínima do núcleo;
-- implementação da identidade `CertRadar`;
-- teste automatizado do comportamento;
-- configuração CMake reproduzível e scripts de compilação/teste;
-- warnings do compilador tratados como erro;
-- dependência doctest fixada por commit;
-- builds modernos separados em x64 e Win32.
+- botão **Copiar resumo** habilitado após a busca;
+- estado final e contagens úteis para o chamado;
+- exclusão intencional de nomes e caminhos locais;
+- cópia Unicode para a área de transferência;
+- teste que usa nomes e caminhos sentinela para provar a sanitização.
 
 Não entregue:
 
-- interface;
-- detecção do Windows;
-- busca de certificados;
-- contrato de diagnóstico;
-- compatibilidade comprovada com versões antigas.
+- compartilhamento automático ou telemetria;
+- conteúdo, senha ou chave privada de PFX/P12;
+- qualificação pendente nas VMs alvo;
+- assinatura de código ou promoção para release pública.
 
 ## Comando de prova
 
@@ -81,10 +79,10 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 58
+100% tests passed, 0 tests failed out of 59
 ```
 
-O empacotamento Release também executa os 53 testes em x64 e Win32, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.
+O empacotamento Release executa a suíte, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.
 
 ## Regime de execução
 

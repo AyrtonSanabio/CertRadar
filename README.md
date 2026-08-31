@@ -8,7 +8,7 @@ O **CertRadar** será um assistente portátil de suporte a certificados digitais
 
 **Fase: implementação incremental, ainda sem release assinada.**
 
-O repositório contém um núcleo nativo em C++17, testes automatizados x64/Win32 e uma interface de desenvolvimento para busca segura de certificados A1. Os módulos de coleta, diagnóstico, ações autorizadas, reteste e o primeiro perfil PJe já estão em construção; a matriz de VMs e o empacotamento ainda não foram concluídos.
+O repositório contém um núcleo nativo em C++17, testes automatizados x64/Win32 e uma interface de desenvolvimento para busca segura de certificados A1. Coleta, diagnóstico, ações autorizadas, reteste, perfil PJe e pacotes portáteis de laboratório já foram implementados. A qualificação em VMs, a prova com A3 real, a licença e a assinatura de código ainda bloqueiam uma release pública.
 
 ## Proposta de valor
 
@@ -99,6 +99,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Hardening e análise estática](docs/16_HARDENING.md)
 - [Auditoria de privacidade](docs/17_AUDITORIA_DE_PRIVACIDADE.md)
 - [Gate de release candidate](docs/18_RELEASE_CANDIDATE.md)
+- [Resumo sanitizado da busca](docs/19_RESUMO_SANITIZADO_DA_BUSCA.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)
@@ -113,7 +114,7 @@ A arquitetura candidata separa um coletor nativo, restrito e majoritariamente de
 ## Execução
 
 Ainda não existe versão distribuível ou assinada do produto.
-Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela somente inicia a busca após o usuário pressionar **Iniciar busca**. Os binários dessa pasta ainda não constituem uma release assinada.
+Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, o botão **Copiar resumo** disponibiliza contagens sanitizadas para o chamado, sem nomes nem caminhos locais. Os binários dessa pasta ainda não constituem uma release assinada.
 
 ### Executar os testes do checkpoint atual
 
