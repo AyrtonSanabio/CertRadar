@@ -270,10 +270,11 @@ Esta fase começou após a implementação do roteiro original. Ela integra ao e
 |---|---|---|
 | T044 | Copia um resumo sanitizado da busca para o chamado | Fronteira entre dado local e dado compartilhável |
 | T045 | Mostra no Explorer o candidato selecionado | Planejamento puro e efeito Win32 controlado |
+| T046 | Exibe o ambiente e o nível de suporte detectados | Adaptação de fatos técnicos para linguagem operacional |
 
 ## Tarefa atual
 
-**T045 — Localização segura do arquivo, concluída.**
+**T046 — Ambiente visível na interface, concluída.**
 
 O roteiro T000–T043 permanece preservado. A Fase G reúne integrações incrementais de usabilidade autorizadas pela continuação do desenvolvimento; cada tarefa mantém TDD, documentação e commit próprio.
 

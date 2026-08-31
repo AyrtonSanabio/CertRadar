@@ -18,6 +18,40 @@ std::wstring scan_status_summary(const ScanStatus status) {
     return L"Estado da busca desconhecido";
 }
 
+std::wstring support_mode_summary(const SupportMode mode) {
+    switch (mode) {
+        case SupportMode::full: return L"suporte completo";
+        case SupportMode::compatible: return L"suporte compatível";
+        case SupportMode::legacy: return L"modo legado";
+        case SupportMode::unsupported: return L"não suportado";
+    }
+    return L"suporte desconhecido";
+}
+
+std::wstring windows_name(const WindowsPlatform& platform) {
+    std::wstring name;
+    if (platform.major == 10 && platform.minor == 0) {
+        name = platform.build >= 22000 ? L"Windows 11" : L"Windows 10";
+    } else if (platform.major == 6 && platform.minor == 3) {
+        name = L"Windows 8.1";
+    } else if (platform.major == 6 && platform.minor == 1) {
+        name = L"Windows 7";
+    } else if (platform.major == 5 && platform.minor == 1) {
+        name = L"Windows XP";
+    } else {
+        name = L"Windows " + std::to_wstring(platform.major) + L"." +
+               std::to_wstring(platform.minor);
+    }
+    if (platform.service_pack_major > 0) {
+        name += L" SP" + std::to_wstring(platform.service_pack_major);
+    }
+    return name;
+}
+
+std::wstring widen_ascii(const std::string& value) {
+    return {value.begin(), value.end()};
+}
+
 }  // namespace
 
 std::wstring candidate_state_label(const CandidateState state) {
@@ -77,6 +111,15 @@ CandidateRevealPlan build_candidate_reveal_plan(
         if (component == L"..") return {CandidateRevealStatus::unsafe_path, {}};
     }
     return {CandidateRevealStatus::ready, path.lexically_normal()};
+}
+
+std::wstring format_platform_summary(const WindowsPlatform& platform) {
+    std::wstring summary = L"Ambiente: " + windows_name(platform);
+    summary += L" (build " + std::to_wstring(platform.build) + L")";
+    summary += L" " + widen_ascii(platform.architecture);
+    summary += L" — " + support_mode_summary(classify_support_mode(platform));
+    summary += platform.elevated ? L" — administrador" : L" — usuário comum";
+    return summary;
 }
 
 }  // namespace certradar

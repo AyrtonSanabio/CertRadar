@@ -7,6 +7,7 @@
 
 #include "certradar/search.hpp"
 #include "certradar/search_plan.hpp"
+#include "certradar/platform.hpp"
 #include "certradar/ui_model.hpp"
 
 #include <cstring>
@@ -25,6 +26,7 @@ constexpr int results_list_id = 1004;
 constexpr int status_label_id = 1005;
 constexpr int copy_summary_button_id = 1006;
 constexpr int reveal_candidate_button_id = 1007;
+constexpr int environment_label_id = 1008;
 constexpr UINT scan_progress_message = WM_APP + 1;
 constexpr UINT scan_finished_message = WM_APP + 2;
 
@@ -36,6 +38,7 @@ HWND results_list = nullptr;
 HWND status_label = nullptr;
 HWND copy_summary_button = nullptr;
 HWND reveal_candidate_button = nullptr;
+HWND environment_label = nullptr;
 std::thread scan_thread;
 std::unique_ptr<certradar::SearchControl> scan_control;
 std::mutex result_mutex;
@@ -234,6 +237,19 @@ void show_completed_result() {
 LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPARAM lparam) {
     switch (message) {
         case WM_CREATE:
+            {
+                std::wstring environment_text = L"Ambiente: não foi possível detectar o Windows.";
+                try {
+                    environment_text = certradar::format_platform_summary(
+                        certradar::detect_windows_platform());
+                } catch (...) {
+                    environment_text = L"Ambiente: não foi possível detectar o Windows.";
+                }
+                environment_label = CreateWindowW(
+                    L"STATIC", environment_text.c_str(), WS_CHILD | WS_VISIBLE,
+                    16, 58, 740, 22, window,
+                    control_identifier(environment_label_id), nullptr, nullptr);
+            }
             start_button = CreateWindowW(L"BUTTON", L"Iniciar busca", WS_CHILD | WS_VISIBLE,
                 16, 16, 130, 32, window, control_identifier(start_button_id), nullptr, nullptr);
             pause_button = CreateWindowW(L"BUTTON", L"Pausar", WS_CHILD | WS_VISIBLE | WS_DISABLED,
@@ -248,16 +264,17 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                 518, 16, 140, 32, window,
                 control_identifier(reveal_candidate_button_id), nullptr, nullptr);
             status_label = CreateWindowW(L"STATIC", L"Pronto. A busca só começa com sua autorização.",
-                WS_CHILD | WS_VISIBLE, 16, 58, 740, 42, window,
+                WS_CHILD | WS_VISIBLE, 16, 84, 740, 42, window,
                 control_identifier(status_label_id), nullptr, nullptr);
             results_list = CreateWindowW(L"LISTBOX", nullptr,
                 WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL | LBS_NOINTEGRALHEIGHT,
-                16, 104, 740, 350, window,
+                16, 130, 740, 324, window,
                 control_identifier(results_list_id), nullptr, nullptr);
             return 0;
         case WM_SIZE:
-            MoveWindow(results_list, 16, 104, LOWORD(lparam) - 32, HIWORD(lparam) - 120, TRUE);
-            MoveWindow(status_label, 16, 58, LOWORD(lparam) - 32, 42, TRUE);
+            MoveWindow(results_list, 16, 130, LOWORD(lparam) - 32, HIWORD(lparam) - 146, TRUE);
+            MoveWindow(status_label, 16, 84, LOWORD(lparam) - 32, 42, TRUE);
+            MoveWindow(environment_label, 16, 58, LOWORD(lparam) - 32, 22, TRUE);
             return 0;
         case WM_COMMAND:
             switch (LOWORD(wparam)) {

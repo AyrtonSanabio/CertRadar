@@ -24,9 +24,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 18. [Gate de release candidate](18_RELEASE_CANDIDATE.md)
 19. [Resumo sanitizado da busca](19_RESUMO_SANITIZADO_DA_BUSCA.md)
 20. [Localização segura do arquivo](20_LOCALIZACAO_SEGURA_DO_ARQUIVO.md)
-21. [Estado da implementação](STATUS.md)
-22. [Glossário](GLOSSARIO.md)
-23. [Referências oficiais](REFERENCIAS.md)
+21. [Ambiente visível na interface](21_AMBIENTE_VISIVEL.md)
+22. [Estado da implementação](STATUS.md)
+23. [Glossário](GLOSSARIO.md)
+24. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

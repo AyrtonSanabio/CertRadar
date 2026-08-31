@@ -1,5 +1,6 @@
 #pragma once
 
+#include "certradar/platform.hpp"
 #include "certradar/search.hpp"
 
 #include <string>
@@ -19,5 +20,6 @@ std::wstring build_search_support_summary(const SearchResult& result);
 CandidateRevealPlan build_candidate_reveal_plan(
     const SearchResult& result,
     std::size_t selection_index);
+std::wstring format_platform_summary(const WindowsPlatform& platform);
 
 }  // namespace certradar

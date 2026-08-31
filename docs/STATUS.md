@@ -50,23 +50,24 @@ Atualizado em 30 de agosto de 2026.
 | T043 — Release candidate reproduzível | Bloqueada por portões externos | VMs, A3 real, licença e assinatura de código pendentes |
 | T044 — Resumo sanitizado da busca | Concluída | Resumo sem nomes/caminhos e 59 testes aprovados em x64/Win32 |
 | T045 — Localização segura do arquivo | Concluída | Plano recusa seleção/caminho inválido e 60 testes aprovados em x64/Win32 |
+| T046 — Ambiente visível na interface | Concluída | Windows/build/arquitetura/suporte/privilégio e 61 testes aprovados em x64/Win32 |
 
 ## Tarefa em revisão
 
-### T045 — Localização segura do arquivo
+### T046 — Ambiente visível na interface
 
 Entregue:
 
-- botão **Mostrar arquivo** habilitado somente após selecionar um resultado;
-- planejador puro que aceita apenas índice existente e caminho absoluto sem `..`;
-- abertura da pasta-pai com o item destacado pela API do Shell;
-- inicialização e encerramento balanceados do apartamento COM;
-- ausência de associação de arquivo, linha de comando ou execução do PFX/P12.
+- linha fixa com Windows, build, arquitetura, nível de suporte e privilégio;
+- distinção entre Windows 10 e 11 pelo build real detectado;
+- rótulos operacionais para Windows 8.1, 7 SP1 e XP SP3;
+- falha da detecção isolada sem impedir o início da busca;
+- status da busca preservado em uma linha separada.
 
 Não entregue:
 
-- importação ou abertura do PFX/P12;
-- recuperação de arquivo que já foi movido, removido ou desconectado;
+- nome comercial detalhado da edição do Windows;
+- correção automática de sistema fora da matriz suportada;
 - inspeção visual automatizada da janela, bloqueada pelo controlador do host;
 - qualificação pendente nas VMs alvo e promoção para release pública.
 
@@ -80,7 +81,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 60
+100% tests passed, 0 tests failed out of 61
 ```
 
 O empacotamento Release executa a suíte, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.

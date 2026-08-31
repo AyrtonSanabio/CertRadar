@@ -67,3 +67,34 @@ TEST_CASE("candidate reveal plan only accepts a selected absolute search result"
     CHECK(missing.status == certradar::CandidateRevealStatus::no_selection);
     CHECK(missing.path.empty());
 }
+
+TEST_CASE("platform summary translates Windows versions support and privilege for support") {
+    certradar::WindowsPlatform windows_10{10, 0, 19045};
+    windows_10.architecture = "x64";
+    const auto ten = certradar::format_platform_summary(windows_10);
+    CHECK(ten.find(L"Windows 10") != std::wstring::npos);
+    CHECK(ten.find(L"build 19045") != std::wstring::npos);
+    CHECK(ten.find(L"x64") != std::wstring::npos);
+    CHECK(ten.find(L"suporte completo") != std::wstring::npos);
+    CHECK(ten.find(L"usuário comum") != std::wstring::npos);
+
+    certradar::WindowsPlatform windows_11{10, 0, 26100};
+    windows_11.architecture = "arm64";
+    windows_11.elevated = true;
+    const auto eleven = certradar::format_platform_summary(windows_11);
+    CHECK(eleven.find(L"Windows 11") != std::wstring::npos);
+    CHECK(eleven.find(L"arm64") != std::wstring::npos);
+    CHECK(eleven.find(L"administrador") != std::wstring::npos);
+
+    certradar::WindowsPlatform windows_7{6, 1, 7601};
+    windows_7.service_pack_major = 1;
+    CHECK(certradar::format_platform_summary(windows_7).find(L"Windows 7 SP1") !=
+          std::wstring::npos);
+
+    certradar::WindowsPlatform windows_xp{5, 1, 2600};
+    windows_xp.service_pack_major = 3;
+    CHECK(certradar::format_platform_summary(windows_xp).find(L"Windows XP SP3") !=
+          std::wstring::npos);
+    CHECK(certradar::format_platform_summary(windows_xp).find(L"modo legado") !=
+          std::wstring::npos);
+}
