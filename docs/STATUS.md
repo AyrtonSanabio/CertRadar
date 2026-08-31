@@ -1,6 +1,6 @@
 # Estado da implementação
 
-Atualizado em 30 de agosto de 2026.
+Atualizado em 31 de agosto de 2026.
 
 | Tarefa | Estado | Evidência |
 |---|---|---|
@@ -52,24 +52,26 @@ Atualizado em 30 de agosto de 2026.
 | T045 — Localização segura do arquivo | Concluída | Plano recusa seleção/caminho inválido e 60 testes aprovados em x64/Win32 |
 | T046 — Ambiente visível na interface | Concluída | Windows/build/arquitetura/suporte/privilégio e 61 testes aprovados em x64/Win32 |
 | T047 — Ambiente no resumo do chamado | Concluída | Mesmos fatos detectados entram no resumo sem nomes/caminhos; 61 testes x64/Win32 |
+| T048 — Certificados instalados na interface | Concluída | Store pessoal do usuário lido em segundo plano; 62 testes x64/Win32 |
 
 ## Tarefa em revisão
 
-### T047 — Ambiente no resumo do chamado
+### T048 — Certificados instalados na interface
 
 Entregue:
 
-- armazenamento local dos fatos de plataforma coletados na inicialização;
-- resumo copiável enriquecido com a mesma descrição exibida na janela;
-- fallback para o resumo básico quando a detecção não está disponível;
-- testes de presença do ambiente e ausência dos caminhos sentinela;
-- nenhuma nova consulta ao sistema ao pressionar **Copiar resumo**.
+- botão **Instalados** para consultar o store pessoal do usuário atual;
+- enumeração somente leitura em thread de trabalho, sem congelar a janela;
+- rótulos com validade, vínculo aparente com chave, tipo de provider, vencimento e somente o final da impressão digital;
+- omissão de titular, emissor, série, provider completo e impressão digital completa;
+- isolamento de falhas de acesso sem derrubar a aplicação.
 
 Não entregue:
 
-- nomes, caminhos, certificados ou segredos no texto compartilhável;
-- envio automático para sistema de chamados;
-- telemetria ou persistência automática;
+- leitura do store da máquina pela interface;
+- aquisição, teste, exportação ou uso da chave privada;
+- abertura de assistentes, solicitação de PIN ou alteração do store;
+- cópia desse resultado para o chamado;
 - qualificação pendente nas VMs alvo e promoção para release pública.
 
 ## Comando de prova
@@ -82,7 +84,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 61
+100% tests passed, 0 tests failed out of 62
 ```
 
 O empacotamento Release executa a suíte, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.

@@ -5,11 +5,13 @@
 #include <commctrl.h>
 #include <shlobj.h>
 
+#include "certradar/certificates.hpp"
 #include "certradar/search.hpp"
 #include "certradar/search_plan.hpp"
 #include "certradar/platform.hpp"
 #include "certradar/ui_model.hpp"
 
+#include <cstdint>
 #include <cstring>
 #include <memory>
 #include <mutex>
@@ -28,8 +30,10 @@ constexpr int status_label_id = 1005;
 constexpr int copy_summary_button_id = 1006;
 constexpr int reveal_candidate_button_id = 1007;
 constexpr int environment_label_id = 1008;
+constexpr int installed_certificates_button_id = 1009;
 constexpr UINT scan_progress_message = WM_APP + 1;
 constexpr UINT scan_finished_message = WM_APP + 2;
+constexpr UINT certificates_finished_message = WM_APP + 3;
 
 HWND main_window = nullptr;
 HWND start_button = nullptr;
@@ -40,12 +44,20 @@ HWND status_label = nullptr;
 HWND copy_summary_button = nullptr;
 HWND reveal_candidate_button = nullptr;
 HWND environment_label = nullptr;
+HWND installed_certificates_button = nullptr;
 std::thread scan_thread;
+std::thread certificate_thread;
 std::unique_ptr<certradar::SearchControl> scan_control;
 std::mutex result_mutex;
 certradar::SearchResult completed_result;
+std::mutex certificate_mutex;
+certradar::CertificateStoreResult completed_certificates;
+bool certificate_enumeration_failed = false;
 bool shell_actions_available = false;
 std::optional<certradar::WindowsPlatform> detected_platform;
+
+enum class ResultView : std::uint8_t { search_candidates, installed_certificates };
+ResultView result_view = ResultView::search_candidates;
 
 class ComApartment final {
 public:
@@ -76,14 +88,21 @@ void set_scan_controls(const bool running) {
     EnableWindow(start_button, running ? FALSE : TRUE);
     EnableWindow(pause_button, running ? TRUE : FALSE);
     EnableWindow(cancel_button, running ? TRUE : FALSE);
+    EnableWindow(installed_certificates_button, running ? FALSE : TRUE);
 }
 
 void finish_previous_thread() {
     if (scan_thread.joinable()) scan_thread.join();
 }
 
+void finish_certificate_thread() {
+    if (certificate_thread.joinable()) certificate_thread.join();
+}
+
 void start_scan() {
     finish_previous_thread();
+    finish_certificate_thread();
+    result_view = ResultView::search_candidates;
     SendMessageW(results_list, LB_RESETCONTENT, 0, 0);
     set_status(L"Preparando busca local...");
     set_scan_controls(true);
@@ -122,6 +141,72 @@ void start_scan() {
         }
         PostMessageW(main_window, scan_finished_message, 0, 0);
     });
+}
+
+void show_installed_certificates() {
+    finish_previous_thread();
+    finish_certificate_thread();
+    result_view = ResultView::installed_certificates;
+    SendMessageW(results_list, LB_RESETCONTENT, 0, 0);
+    EnableWindow(copy_summary_button, FALSE);
+    EnableWindow(reveal_candidate_button, FALSE);
+    EnableWindow(start_button, FALSE);
+    EnableWindow(installed_certificates_button, FALSE);
+    set_status(L"Lendo certificados pessoais do usuário em modo somente leitura...");
+
+    certificate_thread = std::thread([] {
+        certradar::CertificateStoreResult result;
+        bool failed = false;
+        try {
+            result = certradar::enumerate_personal_certificates(
+                certradar::StoreScope::current_user);
+        } catch (...) {
+            failed = true;
+        }
+        {
+            const std::lock_guard<std::mutex> lock(certificate_mutex);
+            completed_certificates = std::move(result);
+            certificate_enumeration_failed = failed;
+        }
+        PostMessageW(main_window, certificates_finished_message, 0, 0);
+    });
+}
+
+void show_installed_certificate_result() {
+    finish_certificate_thread();
+    certradar::CertificateStoreResult result;
+    bool failed = false;
+    {
+        const std::lock_guard<std::mutex> lock(certificate_mutex);
+        result = completed_certificates;
+        failed = certificate_enumeration_failed;
+    }
+    if (failed) {
+        set_status(L"A leitura do store Pessoal falhou sem alterar certificados.");
+        set_scan_controls(false);
+        return;
+    }
+
+    if (!result.opened) {
+        set_status(L"Não foi possível abrir o store Pessoal. Código: " +
+                   std::to_wstring(result.error_code) + L".");
+        set_scan_controls(false);
+        return;
+    }
+
+    if (result.certificates.empty()) {
+        const std::wstring empty = L"Nenhum certificado foi encontrado no store Pessoal do usuário.";
+        SendMessageW(results_list, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(empty.c_str()));
+    } else {
+        for (std::size_t index = 0; index < result.certificates.size(); ++index) {
+            const auto label = certradar::format_certificate_summary(
+                result.certificates[index], index + 1);
+            SendMessageW(results_list, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(label.c_str()));
+        }
+    }
+    set_status(std::to_wstring(result.certificates.size()) +
+               L" certificado(s) no store Pessoal. Somente metadados públicos foram lidos.");
+    set_scan_controls(false);
 }
 
 bool reveal_in_explorer(const std::filesystem::path& path) {
@@ -220,6 +305,7 @@ void pause_or_resume() {
 
 void show_completed_result() {
     finish_previous_thread();
+    result_view = ResultView::search_candidates;
     certradar::SearchResult result;
     {
         const std::lock_guard<std::mutex> lock(result_mutex);
@@ -268,6 +354,10 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                 L"BUTTON", L"Mostrar arquivo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
                 518, 16, 140, 32, window,
                 control_identifier(reveal_candidate_button_id), nullptr, nullptr);
+            installed_certificates_button = CreateWindowW(
+                L"BUTTON", L"Instalados", WS_CHILD | WS_VISIBLE,
+                666, 16, 110, 32, window,
+                control_identifier(installed_certificates_button_id), nullptr, nullptr);
             status_label = CreateWindowW(L"STATIC", L"Pronto. A busca só começa com sua autorização.",
                 WS_CHILD | WS_VISIBLE, 16, 84, 740, 42, window,
                 control_identifier(status_label_id), nullptr, nullptr);
@@ -291,10 +381,13 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                     return 0;
                 case copy_summary_button_id: copy_search_summary(); return 0;
                 case reveal_candidate_button_id: reveal_selected_candidate(); return 0;
+                case installed_certificates_button_id: show_installed_certificates(); return 0;
                 case results_list_id:
                     if (HIWORD(wparam) == LBN_SELCHANGE) {
                         const auto selection = SendMessageW(results_list, LB_GETCURSEL, 0, 0);
-                        EnableWindow(reveal_candidate_button, selection == LB_ERR ? FALSE : TRUE);
+                        const bool can_reveal =
+                            result_view == ResultView::search_candidates && selection != LB_ERR;
+                        EnableWindow(reveal_candidate_button, can_reveal ? TRUE : FALSE);
                     }
                     return 0;
                 default:
@@ -308,9 +401,13 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
         case scan_finished_message:
             show_completed_result();
             return 0;
+        case certificates_finished_message:
+            show_installed_certificate_result();
+            return 0;
         case WM_DESTROY:
             if (scan_control) scan_control->cancel();
             finish_previous_thread();
+            finish_certificate_thread();
             PostQuitMessage(0);
             return 0;
         default:

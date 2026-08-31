@@ -26,9 +26,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 20. [Localização segura do arquivo](20_LOCALIZACAO_SEGURA_DO_ARQUIVO.md)
 21. [Ambiente visível na interface](21_AMBIENTE_VISIVEL.md)
 22. [Ambiente no resumo do chamado](22_AMBIENTE_NO_RESUMO.md)
-23. [Estado da implementação](STATUS.md)
-24. [Glossário](GLOSSARIO.md)
-25. [Referências oficiais](REFERENCIAS.md)
+23. [Certificados instalados na interface](23_CERTIFICADOS_INSTALADOS_NA_INTERFACE.md)
+24. [Estado da implementação](STATUS.md)
+25. [Glossário](GLOSSARIO.md)
+26. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

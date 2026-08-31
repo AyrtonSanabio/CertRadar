@@ -63,3 +63,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Ação **Mostrar arquivo** para abrir o Explorer com o candidato selecionado, usando somente um resultado absoluto validado da busca e sem abrir o contêiner por associação de arquivo.
 - Linha de ambiente na interface com versão/build real do Windows, arquitetura, nível de suporte e privilégio atual, mantendo falhas de detecção isoladas da busca.
 - Inclusão opcional dos mesmos fatos de ambiente no resumo copiável da busca, sem nova detecção e preservando a exclusão de nomes e caminhos locais.
+- Consulta assíncrona dos certificados pessoais instalados no usuário atual pela interface, exibindo somente validade, vínculo aparente com chave, tipo de provider, vencimento e os oito caracteres finais da impressão digital.

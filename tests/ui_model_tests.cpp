@@ -107,3 +107,31 @@ TEST_CASE("platform summary translates Windows versions support and privilege fo
     CHECK(certradar::format_platform_summary(windows_xp).find(L"modo legado") !=
           std::wstring::npos);
 }
+
+TEST_CASE("installed certificate summary exposes support facts without personal identity") {
+    certradar::CertificateRecord certificate;
+    certificate.subject = "Maria da Silva 12345678900";
+    certificate.issuer = "Autoridade Confidencial";
+    certificate.serial_number = "00112233445566778899";
+    certificate.thumbprint = "0123456789ABCDEF";
+    certificate.valid_until = "2027-08-30T12:00:00Z";
+    certificate.validity = certradar::CertificateValidity::valid;
+    certificate.has_private_key_association = true;
+    certificate.provider = "Provider com nome sensivel";
+    certificate.provider_kind = certradar::ProviderKind::ksp;
+
+    const auto summary = certradar::format_certificate_summary(certificate, 2);
+
+    CHECK(summary.find(L"Certificado 2") != std::wstring::npos);
+    CHECK(summary.find(L"89ABCDEF") != std::wstring::npos);
+    CHECK(summary.find(L"válido") != std::wstring::npos);
+    CHECK(summary.find(L"com chave privada associada") != std::wstring::npos);
+    CHECK(summary.find(L"KSP") != std::wstring::npos);
+    CHECK(summary.find(L"2027-08-30") != std::wstring::npos);
+    CHECK(summary.find(L"Maria") == std::wstring::npos);
+    CHECK(summary.find(L"12345678900") == std::wstring::npos);
+    CHECK(summary.find(L"Autoridade Confidencial") == std::wstring::npos);
+    CHECK(summary.find(L"00112233445566778899") == std::wstring::npos);
+    CHECK(summary.find(L"Provider com nome sensivel") == std::wstring::npos);
+    CHECK(summary.find(L"0123456789ABCDEF") == std::wstring::npos);
+}

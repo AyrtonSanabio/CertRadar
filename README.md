@@ -8,7 +8,7 @@ O **CertRadar** será um assistente portátil de suporte a certificados digitais
 
 **Fase: implementação incremental, ainda sem release assinada.**
 
-O repositório contém um núcleo nativo em C++17, testes automatizados x64/Win32 e uma interface de desenvolvimento para busca segura de certificados A1. Coleta, diagnóstico, ações autorizadas, reteste, perfil PJe e pacotes portáteis de laboratório já foram implementados. A qualificação em VMs, a prova com A3 real, a licença e a assinatura de código ainda bloqueiam uma release pública.
+O repositório contém um núcleo nativo em C++17, testes automatizados x64/Win32 e uma interface de desenvolvimento para busca segura de certificados A1 e consulta dos certificados instalados no usuário atual. Coleta, diagnóstico, ações autorizadas, reteste, perfil PJe e pacotes portáteis de laboratório já foram implementados. A qualificação em VMs, a prova com A3 real, a licença e a assinatura de código ainda bloqueiam uma release pública.
 
 ## Proposta de valor
 
@@ -103,6 +103,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Localização segura do arquivo](docs/20_LOCALIZACAO_SEGURA_DO_ARQUIVO.md)
 - [Ambiente visível na interface](docs/21_AMBIENTE_VISIVEL.md)
 - [Ambiente no resumo do chamado](docs/22_AMBIENTE_NO_RESUMO.md)
+- [Certificados instalados na interface](docs/23_CERTIFICADOS_INSTALADOS_NA_INTERFACE.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)
@@ -117,7 +118,7 @@ A arquitetura candidata separa um coletor nativo, restrito e majoritariamente de
 ## Execução
 
 Ainda não existe versão distribuível ou assinada do produto.
-Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela mostra o ambiente detectado e somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, **Copiar resumo** disponibiliza o ambiente e contagens sanitizadas para o chamado, enquanto **Mostrar arquivo** abre a pasta com o candidato selecionado sem executar o PFX/P12. Os binários dessa pasta ainda não constituem uma release assinada.
+Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela mostra o ambiente detectado e somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, **Copiar resumo** disponibiliza o ambiente e contagens sanitizadas para o chamado, enquanto **Mostrar arquivo** abre a pasta com o candidato selecionado sem executar o PFX/P12. **Instalados** lê, em segundo plano e sem alterar o sistema, os certificados pessoais do usuário atual e mostra somente metadados mínimos para suporte. Os binários dessa pasta ainda não constituem uma release assinada.
 
 ### Executar os testes do checkpoint atual
 

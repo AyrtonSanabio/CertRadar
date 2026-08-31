@@ -52,6 +52,25 @@ std::wstring widen_ascii(const std::string& value) {
     return {value.begin(), value.end()};
 }
 
+std::wstring certificate_validity_summary(const CertificateValidity validity) {
+    switch (validity) {
+        case CertificateValidity::not_yet_valid: return L"ainda não válido";
+        case CertificateValidity::valid: return L"válido";
+        case CertificateValidity::expiring_soon: return L"vence em até 30 dias";
+        case CertificateValidity::expired: return L"expirado";
+    }
+    return L"validade desconhecida";
+}
+
+std::wstring provider_kind_summary(const ProviderKind kind) {
+    switch (kind) {
+        case ProviderKind::csp: return L"CSP";
+        case ProviderKind::ksp: return L"KSP";
+        case ProviderKind::unknown: return L"provider desconhecido";
+    }
+    return L"provider desconhecido";
+}
+
 }  // namespace
 
 std::wstring candidate_state_label(const CandidateState state) {
@@ -129,6 +148,26 @@ std::wstring format_platform_summary(const WindowsPlatform& platform) {
     summary += L" " + widen_ascii(platform.architecture);
     summary += L" — " + support_mode_summary(classify_support_mode(platform));
     summary += platform.elevated ? L" — administrador" : L" — usuário comum";
+    return summary;
+}
+
+std::wstring format_certificate_summary(
+    const CertificateRecord& certificate,
+    const std::size_t display_index) {
+    const auto suffix = certificate.thumbprint.size() > 8
+        ? certificate.thumbprint.substr(certificate.thumbprint.size() - 8)
+        : certificate.thumbprint;
+    std::wstring summary = L"Certificado " + std::to_wstring(display_index);
+    summary += suffix.empty() ? L" — identificador indisponível" :
+        L" — final " + widen_ascii(suffix);
+    summary += L" — " + certificate_validity_summary(certificate.validity);
+    summary += certificate.has_private_key_association
+        ? L" — com chave privada associada"
+        : L" — sem chave privada associada";
+    summary += L" — " + provider_kind_summary(certificate.provider_kind);
+    if (!certificate.valid_until.empty()) {
+        summary += L" — vence " + widen_ascii(certificate.valid_until);
+    }
     return summary;
 }
 

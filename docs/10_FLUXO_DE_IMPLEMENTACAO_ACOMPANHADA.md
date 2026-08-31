@@ -272,10 +272,11 @@ Esta fase começou após a implementação do roteiro original. Ela integra ao e
 | T045 | Mostra no Explorer o candidato selecionado | Planejamento puro e efeito Win32 controlado |
 | T046 | Exibe o ambiente e o nível de suporte detectados | Adaptação de fatos técnicos para linguagem operacional |
 | T047 | Inclui o ambiente detectado no resumo da busca | Reuso de fatos sem duplicar detecção |
+| T048 | Lista na janela os certificados instalados do usuário atual | Store X.509 assíncrono e minimização visual |
 
 ## Tarefa atual
 
-**T047 — Ambiente no resumo do chamado, concluída.**
+**T048 — Certificados instalados na interface, concluída.**
 
 O roteiro T000–T043 permanece preservado. A Fase G reúne integrações incrementais de usabilidade autorizadas pela continuação do desenvolvimento; cada tarefa mantém TDD, documentação e commit próprio.
 
