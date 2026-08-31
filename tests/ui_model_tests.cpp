@@ -39,6 +39,15 @@ TEST_CASE("search support summary reports counts without exposing local paths") 
     CHECK(summary.find(L"C:/Users/Maria") == std::wstring::npos);
     CHECK(summary.find(L"12345678901.pfx") == std::wstring::npos);
     CHECK(summary.find(L"cliente-senha.p12") == std::wstring::npos);
+
+    certradar::WindowsPlatform platform{10, 0, 19045};
+    platform.architecture = "x64";
+    const auto contextual_summary = certradar::build_search_support_summary(result, platform);
+    CHECK(contextual_summary.find(L"Windows 10") != std::wstring::npos);
+    CHECK(contextual_summary.find(L"build 19045") != std::wstring::npos);
+    CHECK(contextual_summary.find(L"x64") != std::wstring::npos);
+    CHECK(contextual_summary.find(L"12345678901.pfx") == std::wstring::npos);
+    CHECK(contextual_summary.find(L"cliente-senha.p12") == std::wstring::npos);
 }
 
 TEST_CASE("candidate reveal plan only accepts a selected absolute search result") {

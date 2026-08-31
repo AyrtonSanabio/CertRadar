@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-A T044 transforma o resultado da busca A1 em um texto curto que o atendente pode colar no chamado. O resumo informa se a busca terminou, foi cancelada ou falhou, além das quantidades de candidatos, classificações, pastas verificadas, acessos negados e erros isolados.
+A T044 transforma o resultado da busca A1 em um texto curto que o atendente pode colar no chamado. O resumo informa se a busca terminou, foi cancelada ou falhou, além das quantidades de candidatos, classificações, pastas verificadas, acessos negados e erros isolados. Desde a T047, ele também inclui os fatos de plataforma já detectados na inicialização.
 
 ## Fronteira de privacidade
 

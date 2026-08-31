@@ -13,6 +13,7 @@
 #include <cstring>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <thread>
 #include <vector>
@@ -44,6 +45,7 @@ std::unique_ptr<certradar::SearchControl> scan_control;
 std::mutex result_mutex;
 certradar::SearchResult completed_result;
 bool shell_actions_available = false;
+std::optional<certradar::WindowsPlatform> detected_platform;
 
 class ComApartment final {
 public:
@@ -193,7 +195,9 @@ void copy_search_summary() {
         const std::lock_guard<std::mutex> lock(result_mutex);
         result = completed_result;
     }
-    const auto summary = certradar::build_search_support_summary(result);
+    const auto summary = detected_platform.has_value()
+        ? certradar::build_search_support_summary(result, *detected_platform)
+        : certradar::build_search_support_summary(result);
     if (copy_unicode_text_to_clipboard(summary)) {
         set_status(L"Resumo sanitizado copiado. Ele não contém nomes nem caminhos locais.");
     } else {
@@ -240,9 +244,10 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
             {
                 std::wstring environment_text = L"Ambiente: não foi possível detectar o Windows.";
                 try {
-                    environment_text = certradar::format_platform_summary(
-                        certradar::detect_windows_platform());
+                    detected_platform = certradar::detect_windows_platform();
+                    environment_text = certradar::format_platform_summary(*detected_platform);
                 } catch (...) {
+                    detected_platform.reset();
                     environment_text = L"Ambiente: não foi possível detectar o Windows.";
                 }
                 environment_label = CreateWindowW(

@@ -17,6 +17,9 @@ struct CandidateRevealPlan {
 std::wstring candidate_state_label(CandidateState state);
 std::wstring format_candidate_label(const SearchCandidate& candidate);
 std::wstring build_search_support_summary(const SearchResult& result);
+std::wstring build_search_support_summary(
+    const SearchResult& result,
+    const WindowsPlatform& platform);
 CandidateRevealPlan build_candidate_reveal_plan(
     const SearchResult& result,
     std::size_t selection_index);

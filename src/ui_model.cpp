@@ -98,6 +98,16 @@ std::wstring build_search_support_summary(const SearchResult& result) {
     return summary;
 }
 
+std::wstring build_search_support_summary(
+    const SearchResult& result,
+    const WindowsPlatform& platform) {
+    auto summary = build_search_support_summary(result);
+    const auto first_line = summary.find(L"\r\n");
+    const auto insertion = first_line == std::wstring::npos ? summary.size() : first_line + 2;
+    summary.insert(insertion, format_platform_summary(platform) + L"\r\n");
+    return summary;
+}
+
 CandidateRevealPlan build_candidate_reveal_plan(
     const SearchResult& result,
     const std::size_t selection_index) {

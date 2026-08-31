@@ -102,6 +102,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Resumo sanitizado da busca](docs/19_RESUMO_SANITIZADO_DA_BUSCA.md)
 - [Localização segura do arquivo](docs/20_LOCALIZACAO_SEGURA_DO_ARQUIVO.md)
 - [Ambiente visível na interface](docs/21_AMBIENTE_VISIVEL.md)
+- [Ambiente no resumo do chamado](docs/22_AMBIENTE_NO_RESUMO.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)
@@ -116,7 +117,7 @@ A arquitetura candidata separa um coletor nativo, restrito e majoritariamente de
 ## Execução
 
 Ainda não existe versão distribuível ou assinada do produto.
-Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela mostra o ambiente detectado e somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, **Copiar resumo** disponibiliza contagens sanitizadas para o chamado e **Mostrar arquivo** abre a pasta com o candidato selecionado, sem executar o PFX/P12. Os binários dessa pasta ainda não constituem uma release assinada.
+Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela mostra o ambiente detectado e somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, **Copiar resumo** disponibiliza o ambiente e contagens sanitizadas para o chamado, enquanto **Mostrar arquivo** abre a pasta com o candidato selecionado sem executar o PFX/P12. Os binários dessa pasta ainda não constituem uma release assinada.
 
 ### Executar os testes do checkpoint atual
 

@@ -25,9 +25,10 @@ Esta pasta é a fonte de verdade para o escopo e as decisões técnicas do CertR
 19. [Resumo sanitizado da busca](19_RESUMO_SANITIZADO_DA_BUSCA.md)
 20. [Localização segura do arquivo](20_LOCALIZACAO_SEGURA_DO_ARQUIVO.md)
 21. [Ambiente visível na interface](21_AMBIENTE_VISIVEL.md)
-22. [Estado da implementação](STATUS.md)
-23. [Glossário](GLOSSARIO.md)
-24. [Referências oficiais](REFERENCIAS.md)
+22. [Ambiente no resumo do chamado](22_AMBIENTE_NO_RESUMO.md)
+23. [Estado da implementação](STATUS.md)
+24. [Glossário](GLOSSARIO.md)
+25. [Referências oficiais](REFERENCIAS.md)
 
 ## Regra de alteração
 

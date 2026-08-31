@@ -51,24 +51,25 @@ Atualizado em 30 de agosto de 2026.
 | T044 — Resumo sanitizado da busca | Concluída | Resumo sem nomes/caminhos e 59 testes aprovados em x64/Win32 |
 | T045 — Localização segura do arquivo | Concluída | Plano recusa seleção/caminho inválido e 60 testes aprovados em x64/Win32 |
 | T046 — Ambiente visível na interface | Concluída | Windows/build/arquitetura/suporte/privilégio e 61 testes aprovados em x64/Win32 |
+| T047 — Ambiente no resumo do chamado | Concluída | Mesmos fatos detectados entram no resumo sem nomes/caminhos; 61 testes x64/Win32 |
 
 ## Tarefa em revisão
 
-### T046 — Ambiente visível na interface
+### T047 — Ambiente no resumo do chamado
 
 Entregue:
 
-- linha fixa com Windows, build, arquitetura, nível de suporte e privilégio;
-- distinção entre Windows 10 e 11 pelo build real detectado;
-- rótulos operacionais para Windows 8.1, 7 SP1 e XP SP3;
-- falha da detecção isolada sem impedir o início da busca;
-- status da busca preservado em uma linha separada.
+- armazenamento local dos fatos de plataforma coletados na inicialização;
+- resumo copiável enriquecido com a mesma descrição exibida na janela;
+- fallback para o resumo básico quando a detecção não está disponível;
+- testes de presença do ambiente e ausência dos caminhos sentinela;
+- nenhuma nova consulta ao sistema ao pressionar **Copiar resumo**.
 
 Não entregue:
 
-- nome comercial detalhado da edição do Windows;
-- correção automática de sistema fora da matriz suportada;
-- inspeção visual automatizada da janela, bloqueada pelo controlador do host;
+- nomes, caminhos, certificados ou segredos no texto compartilhável;
+- envio automático para sistema de chamados;
+- telemetria ou persistência automática;
 - qualificação pendente nas VMs alvo e promoção para release pública.
 
 ## Comando de prova
