@@ -135,3 +135,48 @@ TEST_CASE("installed certificate summary exposes support facts without personal 
     CHECK(summary.find(L"Provider com nome sensivel") == std::wstring::npos);
     CHECK(summary.find(L"0123456789ABCDEF") == std::wstring::npos);
 }
+
+TEST_CASE("installed certificate store support summary contains counts without identity") {
+    certradar::CertificateRecord valid;
+    valid.subject = "Maria da Silva 12345678900";
+    valid.issuer = "Autoridade Confidencial";
+    valid.serial_number = "SERIAL-SENSIVEL";
+    valid.thumbprint = "0123456789ABCDEF";
+    valid.provider = "Provider completo sensivel";
+    valid.validity = certradar::CertificateValidity::valid;
+    valid.has_private_key_association = true;
+    valid.provider_kind = certradar::ProviderKind::ksp;
+
+    certradar::CertificateRecord expired;
+    expired.subject = "Joao Cliente 98765432100";
+    expired.thumbprint = "FEDCBA9876543210";
+    expired.validity = certradar::CertificateValidity::expired;
+    expired.provider_kind = certradar::ProviderKind::csp;
+
+    certradar::CertificateStoreResult result;
+    result.opened = true;
+    result.certificates = {valid, expired};
+
+    certradar::WindowsPlatform platform{10, 0, 19045};
+    platform.architecture = "x64";
+    const auto summary =
+        certradar::build_certificate_store_support_summary(result, platform);
+
+    CHECK(summary.find(L"Certificados instalados: 2") != std::wstring::npos);
+    CHECK(summary.find(L"Válidos: 1") != std::wstring::npos);
+    CHECK(summary.find(L"Expirados: 1") != std::wstring::npos);
+    CHECK(summary.find(L"Com chave associada: 1") != std::wstring::npos);
+    CHECK(summary.find(L"Sem chave associada: 1") != std::wstring::npos);
+    CHECK(summary.find(L"KSP: 1") != std::wstring::npos);
+    CHECK(summary.find(L"CSP: 1") != std::wstring::npos);
+    CHECK(summary.find(L"Windows 10") != std::wstring::npos);
+    CHECK(summary.find(L"Maria") == std::wstring::npos);
+    CHECK(summary.find(L"12345678900") == std::wstring::npos);
+    CHECK(summary.find(L"Autoridade Confidencial") == std::wstring::npos);
+    CHECK(summary.find(L"SERIAL-SENSIVEL") == std::wstring::npos);
+    CHECK(summary.find(L"0123456789ABCDEF") == std::wstring::npos);
+    CHECK(summary.find(L"Provider completo sensivel") == std::wstring::npos);
+    CHECK(summary.find(L"Joao") == std::wstring::npos);
+    CHECK(summary.find(L"98765432100") == std::wstring::npos);
+    CHECK(summary.find(L"FEDCBA9876543210") == std::wstring::npos);
+}

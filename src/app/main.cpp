@@ -207,6 +207,7 @@ void show_installed_certificate_result() {
     set_status(std::to_wstring(result.certificates.size()) +
                L" certificado(s) no store Pessoal. Somente metadados públicos foram lidos.");
     set_scan_controls(false);
+    EnableWindow(copy_summary_button, TRUE);
 }
 
 bool reveal_in_explorer(const std::filesystem::path& path) {
@@ -274,17 +275,29 @@ bool copy_unicode_text_to_clipboard(const std::wstring& text) {
     return true;
 }
 
-void copy_search_summary() {
-    certradar::SearchResult result;
-    {
-        const std::lock_guard<std::mutex> lock(result_mutex);
-        result = completed_result;
+void copy_support_summary() {
+    std::wstring summary;
+    if (result_view == ResultView::installed_certificates) {
+        certradar::CertificateStoreResult result;
+        {
+            const std::lock_guard<std::mutex> lock(certificate_mutex);
+            result = completed_certificates;
+        }
+        summary = detected_platform.has_value()
+            ? certradar::build_certificate_store_support_summary(result, *detected_platform)
+            : certradar::build_certificate_store_support_summary(result);
+    } else {
+        certradar::SearchResult result;
+        {
+            const std::lock_guard<std::mutex> lock(result_mutex);
+            result = completed_result;
+        }
+        summary = detected_platform.has_value()
+            ? certradar::build_search_support_summary(result, *detected_platform)
+            : certradar::build_search_support_summary(result);
     }
-    const auto summary = detected_platform.has_value()
-        ? certradar::build_search_support_summary(result, *detected_platform)
-        : certradar::build_search_support_summary(result);
     if (copy_unicode_text_to_clipboard(summary)) {
-        set_status(L"Resumo sanitizado copiado. Ele não contém nomes nem caminhos locais.");
+        set_status(L"Resumo sanitizado copiado. Ele não contém nomes nem identificadores completos.");
     } else {
         set_status(L"Não foi possível acessar a área de transferência. Tente novamente.");
     }
@@ -379,7 +392,7 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                     if (scan_control) scan_control->cancel();
                     set_status(L"Cancelamento solicitado...");
                     return 0;
-                case copy_summary_button_id: copy_search_summary(); return 0;
+                case copy_summary_button_id: copy_support_summary(); return 0;
                 case reveal_candidate_button_id: reveal_selected_candidate(); return 0;
                 case installed_certificates_button_id: show_installed_certificates(); return 0;
                 case results_list_id:

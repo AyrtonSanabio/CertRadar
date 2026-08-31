@@ -53,25 +53,26 @@ Atualizado em 31 de agosto de 2026.
 | T046 — Ambiente visível na interface | Concluída | Windows/build/arquitetura/suporte/privilégio e 61 testes aprovados em x64/Win32 |
 | T047 — Ambiente no resumo do chamado | Concluída | Mesmos fatos detectados entram no resumo sem nomes/caminhos; 61 testes x64/Win32 |
 | T048 — Certificados instalados na interface | Concluída | Store pessoal do usuário lido em segundo plano; 62 testes x64/Win32 |
+| T049 — Resumo sanitizado dos certificados instalados | Concluída | Contagens sem identidade nem identificadores completos; 63 testes x64/Win32 |
 
 ## Tarefa em revisão
 
-### T048 — Certificados instalados na interface
+### T049 — Resumo sanitizado dos certificados instalados
 
 Entregue:
 
-- botão **Instalados** para consultar o store pessoal do usuário atual;
-- enumeração somente leitura em thread de trabalho, sem congelar a janela;
-- rótulos com validade, vínculo aparente com chave, tipo de provider, vencimento e somente o final da impressão digital;
-- omissão de titular, emissor, série, provider completo e impressão digital completa;
-- isolamento de falhas de acesso sem derrubar a aplicação.
+- reutilização de **Copiar resumo** conforme a visualização ativa;
+- contagens de certificados válidos, próximos do vencimento, vencidos e ainda não válidos;
+- contagens com/sem vínculo aparente de chave e por categoria CSP/KSP/desconhecida;
+- inclusão do ambiente já detectado, sem nova consulta ao sistema;
+- teste com dados pessoais sentinela exigindo a ausência de todos no texto.
 
 Não entregue:
 
-- leitura do store da máquina pela interface;
+- titular, CPF, emissor, série, impressão digital ou provider completo no resumo;
+- detalhes linha a linha dos certificados no texto copiável;
 - aquisição, teste, exportação ou uso da chave privada;
-- abertura de assistentes, solicitação de PIN ou alteração do store;
-- cópia desse resultado para o chamado;
+- envio automático para qualquer serviço externo;
 - qualificação pendente nas VMs alvo e promoção para release pública.
 
 ## Comando de prova
@@ -84,7 +85,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 62
+100% tests passed, 0 tests failed out of 63
 ```
 
 O empacotamento Release executa a suíte, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.

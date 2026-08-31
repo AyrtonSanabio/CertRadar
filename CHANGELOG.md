@@ -64,3 +64,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Linha de ambiente na interface com versão/build real do Windows, arquitetura, nível de suporte e privilégio atual, mantendo falhas de detecção isoladas da busca.
 - Inclusão opcional dos mesmos fatos de ambiente no resumo copiável da busca, sem nova detecção e preservando a exclusão de nomes e caminhos locais.
 - Consulta assíncrona dos certificados pessoais instalados no usuário atual pela interface, exibindo somente validade, vínculo aparente com chave, tipo de provider, vencimento e os oito caracteres finais da impressão digital.
+- Resumo copiável dos certificados instalados com contagens por validade, associação de chave e categoria CSP/KSP, sem titular, CPF, emissor, série, impressão digital ou nome completo do provider.

@@ -28,5 +28,10 @@ std::wstring format_platform_summary(const WindowsPlatform& platform);
 std::wstring format_certificate_summary(
     const CertificateRecord& certificate,
     std::size_t display_index);
+std::wstring build_certificate_store_support_summary(
+    const CertificateStoreResult& result);
+std::wstring build_certificate_store_support_summary(
+    const CertificateStoreResult& result,
+    const WindowsPlatform& platform);
 
 }  // namespace certradar

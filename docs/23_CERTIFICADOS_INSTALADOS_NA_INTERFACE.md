@@ -34,7 +34,7 @@ Não são mostrados titular, CPF, emissor, número de série, impressão digital
 - A propriedade de chave é apenas metadado do certificado; ela não prova que a chave ou o token esteja funcional.
 - Nenhum PIN, senha, elevação ou consentimento para mutação é solicitado.
 - **Mostrar arquivo** permanece desabilitado nessa visualização, pois um certificado instalado não é um resultado de arquivo PFX/P12.
-- **Copiar resumo** permanece restrito ao resultado da busca de arquivos nesta tarefa.
+- Nesta tarefa, **Copiar resumo** permanecia restrito à busca de arquivos. A T049 posterior adicionou um resumo agregado e sanitizado específico para esta visualização.
 - O store `LocalMachine\\MY` ainda não foi integrado à janela.
 
 ## Prova automatizada

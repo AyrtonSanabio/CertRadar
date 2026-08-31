@@ -171,4 +171,54 @@ std::wstring format_certificate_summary(
     return summary;
 }
 
+std::wstring build_certificate_store_support_summary(
+    const CertificateStoreResult& result) {
+    std::array<std::uint64_t, 4> validity{};
+    std::array<std::uint64_t, 3> providers{};
+    std::uint64_t with_key = 0;
+    for (const auto& certificate : result.certificates) {
+        const auto validity_index = static_cast<std::size_t>(certificate.validity);
+        if (validity_index < validity.size()) ++validity[validity_index];
+        const auto provider_index = static_cast<std::size_t>(certificate.provider_kind);
+        if (provider_index < providers.size()) ++providers[provider_index];
+        if (certificate.has_private_key_association) ++with_key;
+    }
+
+    std::wstring summary = L"Resumo CertRadar — certificados instalados\r\n";
+    summary += result.opened
+        ? L"Store Pessoal do usuário: acessível\r\n"
+        : L"Store Pessoal do usuário: indisponível\r\n";
+    summary += L"Certificados instalados: " +
+               std::to_wstring(result.certificates.size()) + L"\r\n";
+    summary += L"Ainda não válidos: " + std::to_wstring(
+        validity[static_cast<std::size_t>(CertificateValidity::not_yet_valid)]) + L"\r\n";
+    summary += L"Válidos: " + std::to_wstring(
+        validity[static_cast<std::size_t>(CertificateValidity::valid)]) + L"\r\n";
+    summary += L"Vencem em até 30 dias: " + std::to_wstring(
+        validity[static_cast<std::size_t>(CertificateValidity::expiring_soon)]) + L"\r\n";
+    summary += L"Expirados: " + std::to_wstring(
+        validity[static_cast<std::size_t>(CertificateValidity::expired)]) + L"\r\n";
+    summary += L"Com chave associada: " + std::to_wstring(with_key) + L"\r\n";
+    summary += L"Sem chave associada: " +
+               std::to_wstring(result.certificates.size() - with_key) + L"\r\n";
+    summary += L"CSP: " + std::to_wstring(
+        providers[static_cast<std::size_t>(ProviderKind::csp)]) + L"\r\n";
+    summary += L"KSP: " + std::to_wstring(
+        providers[static_cast<std::size_t>(ProviderKind::ksp)]) + L"\r\n";
+    summary += L"Provider desconhecido: " + std::to_wstring(
+        providers[static_cast<std::size_t>(ProviderKind::unknown)]) + L"\r\n";
+    summary += L"Privacidade: identidade, emissor, série, impressão digital e provider completo não foram incluídos; nenhuma chave foi acessada.\r\n";
+    return summary;
+}
+
+std::wstring build_certificate_store_support_summary(
+    const CertificateStoreResult& result,
+    const WindowsPlatform& platform) {
+    auto summary = build_certificate_store_support_summary(result);
+    const auto first_line = summary.find(L"\r\n");
+    const auto insertion = first_line == std::wstring::npos ? summary.size() : first_line + 2;
+    summary.insert(insertion, format_platform_summary(platform) + L"\r\n");
+    return summary;
+}
+
 }  // namespace certradar
