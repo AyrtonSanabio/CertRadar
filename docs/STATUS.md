@@ -49,25 +49,26 @@ Atualizado em 30 de agosto de 2026.
 | T042 — Auditoria de privacidade | Concluída | Sentinelas redigidos, 58 testes x64/Win32 e auditoria de APIs/arquivos |
 | T043 — Release candidate reproduzível | Bloqueada por portões externos | VMs, A3 real, licença e assinatura de código pendentes |
 | T044 — Resumo sanitizado da busca | Concluída | Resumo sem nomes/caminhos e 59 testes aprovados em x64/Win32 |
+| T045 — Localização segura do arquivo | Concluída | Plano recusa seleção/caminho inválido e 60 testes aprovados em x64/Win32 |
 
 ## Tarefa em revisão
 
-### T044 — Resumo sanitizado da busca
+### T045 — Localização segura do arquivo
 
 Entregue:
 
-- botão **Copiar resumo** habilitado após a busca;
-- estado final e contagens úteis para o chamado;
-- exclusão intencional de nomes e caminhos locais;
-- cópia Unicode para a área de transferência;
-- teste que usa nomes e caminhos sentinela para provar a sanitização.
+- botão **Mostrar arquivo** habilitado somente após selecionar um resultado;
+- planejador puro que aceita apenas índice existente e caminho absoluto sem `..`;
+- abertura da pasta-pai com o item destacado pela API do Shell;
+- inicialização e encerramento balanceados do apartamento COM;
+- ausência de associação de arquivo, linha de comando ou execução do PFX/P12.
 
 Não entregue:
 
-- compartilhamento automático ou telemetria;
-- conteúdo, senha ou chave privada de PFX/P12;
-- qualificação pendente nas VMs alvo;
-- assinatura de código ou promoção para release pública.
+- importação ou abertura do PFX/P12;
+- recuperação de arquivo que já foi movido, removido ou desconectado;
+- inspeção visual automatizada da janela, bloqueada pelo controlador do host;
+- qualificação pendente nas VMs alvo e promoção para release pública.
 
 ## Comando de prova
 
@@ -79,7 +80,7 @@ Não entregue:
 Resultado atual:
 
 ```text
-100% tests passed, 0 tests failed out of 59
+100% tests passed, 0 tests failed out of 60
 ```
 
 O empacotamento Release executa a suíte, valida os hashes e inicia o binário a partir da pasta portátil. O binário permanece explicitamente não assinado.

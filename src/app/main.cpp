@@ -3,6 +3,7 @@
 #define UNICODE
 #include <windows.h>
 #include <commctrl.h>
+#include <shlobj.h>
 
 #include "certradar/search.hpp"
 #include "certradar/search_plan.hpp"
@@ -23,6 +24,7 @@ constexpr int cancel_button_id = 1003;
 constexpr int results_list_id = 1004;
 constexpr int status_label_id = 1005;
 constexpr int copy_summary_button_id = 1006;
+constexpr int reveal_candidate_button_id = 1007;
 constexpr UINT scan_progress_message = WM_APP + 1;
 constexpr UINT scan_finished_message = WM_APP + 2;
 
@@ -33,10 +35,29 @@ HWND cancel_button = nullptr;
 HWND results_list = nullptr;
 HWND status_label = nullptr;
 HWND copy_summary_button = nullptr;
+HWND reveal_candidate_button = nullptr;
 std::thread scan_thread;
 std::unique_ptr<certradar::SearchControl> scan_control;
 std::mutex result_mutex;
 certradar::SearchResult completed_result;
+bool shell_actions_available = false;
+
+class ComApartment final {
+public:
+    ComApartment() noexcept
+        : status_(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE)) {}
+
+    ~ComApartment() {
+        if (SUCCEEDED(status_)) CoUninitialize();
+    }
+
+    bool available() const noexcept {
+        return SUCCEEDED(status_) || status_ == RPC_E_CHANGED_MODE;
+    }
+
+private:
+    HRESULT status_;
+};
 
 HMENU control_identifier(const int identifier) noexcept {
     return reinterpret_cast<HMENU>(static_cast<INT_PTR>(identifier));
@@ -62,6 +83,7 @@ void start_scan() {
     set_status(L"Preparando busca local...");
     set_scan_controls(true);
     EnableWindow(copy_summary_button, FALSE);
+    EnableWindow(reveal_candidate_button, FALSE);
     SetWindowTextW(pause_button, L"Pausar");
     scan_control = std::make_unique<certradar::SearchControl>();
     auto* const control = scan_control.get();
@@ -95,6 +117,40 @@ void start_scan() {
         }
         PostMessageW(main_window, scan_finished_message, 0, 0);
     });
+}
+
+bool reveal_in_explorer(const std::filesystem::path& path) {
+    if (!shell_actions_available) return false;
+    PIDLIST_ABSOLUTE item = ILCreateFromPathW(path.c_str());
+    if (item == nullptr) return false;
+    const HRESULT result = SHOpenFolderAndSelectItems(item, 0, nullptr, 0);
+    ILFree(item);
+    return SUCCEEDED(result);
+}
+
+void reveal_selected_candidate() {
+    const LRESULT selection = SendMessageW(results_list, LB_GETCURSEL, 0, 0);
+    if (selection == LB_ERR) {
+        set_status(L"Selecione um candidato antes de mostrar o arquivo.");
+        return;
+    }
+
+    certradar::SearchResult result;
+    {
+        const std::lock_guard<std::mutex> lock(result_mutex);
+        result = completed_result;
+    }
+    const auto plan = certradar::build_candidate_reveal_plan(
+        result, static_cast<std::size_t>(selection));
+    if (plan.status != certradar::CandidateRevealStatus::ready) {
+        set_status(L"O candidato selecionado não possui um caminho local seguro.");
+        return;
+    }
+    if (reveal_in_explorer(plan.path)) {
+        set_status(L"O Explorer foi aberto com o arquivo selecionado. O arquivo não foi executado.");
+    } else {
+        set_status(L"Não foi possível mostrar o arquivo. Ele pode ter sido movido ou removido.");
+    }
 }
 
 bool copy_unicode_text_to_clipboard(const std::wstring& text) {
@@ -187,6 +243,10 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
             copy_summary_button = CreateWindowW(
                 L"BUTTON", L"Copiar resumo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
                 370, 16, 140, 32, window, control_identifier(copy_summary_button_id), nullptr, nullptr);
+            reveal_candidate_button = CreateWindowW(
+                L"BUTTON", L"Mostrar arquivo", WS_CHILD | WS_VISIBLE | WS_DISABLED,
+                518, 16, 140, 32, window,
+                control_identifier(reveal_candidate_button_id), nullptr, nullptr);
             status_label = CreateWindowW(L"STATIC", L"Pronto. A busca só começa com sua autorização.",
                 WS_CHILD | WS_VISIBLE, 16, 58, 740, 42, window,
                 control_identifier(status_label_id), nullptr, nullptr);
@@ -208,6 +268,13 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
                     set_status(L"Cancelamento solicitado...");
                     return 0;
                 case copy_summary_button_id: copy_search_summary(); return 0;
+                case reveal_candidate_button_id: reveal_selected_candidate(); return 0;
+                case results_list_id:
+                    if (HIWORD(wparam) == LBN_SELCHANGE) {
+                        const auto selection = SendMessageW(results_list, LB_GETCURSEL, 0, 0);
+                        EnableWindow(reveal_candidate_button, selection == LB_ERR ? FALSE : TRUE);
+                    }
+                    return 0;
                 default:
                     break;
             }
@@ -233,6 +300,9 @@ LRESULT CALLBACK window_procedure(HWND window, UINT message, WPARAM wparam, LPAR
 }  // namespace
 
 int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int show_command) {
+    ComApartment apartment;
+    shell_actions_available = apartment.available();
+
     INITCOMMONCONTROLSEX controls{sizeof(controls), ICC_STANDARD_CLASSES};
     InitCommonControlsEx(&controls);
 

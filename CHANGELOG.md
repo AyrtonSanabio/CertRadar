@@ -60,3 +60,4 @@ O formato segue a ideia de [Keep a Changelog](https://keepachangelog.com/pt-BR/1
 - Sanitização defensiva das saídas de suporte e auditoria automatizada de privacidade, recusando credenciais versionadas, exportação de chaves, uploads, processos arbitrários e persistência inesperada no código moderno.
 - Gate de release candidate que enumera bloqueios externos (VMs qualificadas, A3 real, licença, assinatura de código, pacotes atuais e árvore limpa) sem transformar ausência de evidência em aprovação.
 - Botão de cópia do resumo da busca para o chamado, contendo somente estado e contagens; nomes de arquivos e caminhos locais permanecem exclusivamente na interface da máquina atendida.
+- Ação **Mostrar arquivo** para abrir o Explorer com o candidato selecionado, usando somente um resultado absoluto validado da busca e sem abrir o contêiner por associação de arquivo.

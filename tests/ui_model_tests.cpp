@@ -40,3 +40,30 @@ TEST_CASE("search support summary reports counts without exposing local paths") 
     CHECK(summary.find(L"12345678901.pfx") == std::wstring::npos);
     CHECK(summary.find(L"cliente-senha.p12") == std::wstring::npos);
 }
+
+TEST_CASE("candidate reveal plan only accepts a selected absolute search result") {
+    certradar::SearchResult result;
+    result.candidates = {
+        {"C:/Users/Teste/Downloads/certificado.pfx", 100,
+         certradar::CandidateState::recognized},
+        {"caminho/relativo.p12", 200, certradar::CandidateState::invalid},
+        {"C:/Users/Teste/../Outro/certificado.pfx", 300,
+         certradar::CandidateState::recognized},
+    };
+
+    const auto ready = certradar::build_candidate_reveal_plan(result, 0);
+    CHECK(ready.status == certradar::CandidateRevealStatus::ready);
+    CHECK(ready.path == result.candidates[0].path);
+
+    const auto relative = certradar::build_candidate_reveal_plan(result, 1);
+    CHECK(relative.status == certradar::CandidateRevealStatus::unsafe_path);
+    CHECK(relative.path.empty());
+
+    const auto traversal = certradar::build_candidate_reveal_plan(result, 2);
+    CHECK(traversal.status == certradar::CandidateRevealStatus::unsafe_path);
+    CHECK(traversal.path.empty());
+
+    const auto missing = certradar::build_candidate_reveal_plan(result, 99);
+    CHECK(missing.status == certradar::CandidateRevealStatus::no_selection);
+    CHECK(missing.path.empty());
+}

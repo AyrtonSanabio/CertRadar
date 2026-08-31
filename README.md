@@ -100,6 +100,7 @@ Se o arquivo não for encontrado nas pastas prioritárias, a busca continuará p
 - [Auditoria de privacidade](docs/17_AUDITORIA_DE_PRIVACIDADE.md)
 - [Gate de release candidate](docs/18_RELEASE_CANDIDATE.md)
 - [Resumo sanitizado da busca](docs/19_RESUMO_SANITIZADO_DA_BUSCA.md)
+- [Localização segura do arquivo](docs/20_LOCALIZACAO_SEGURA_DO_ARQUIVO.md)
 - [Estado da implementação](docs/STATUS.md)
 - [Glossário](docs/GLOSSARIO.md)
 - [Referências oficiais](docs/REFERENCIAS.md)
@@ -114,7 +115,7 @@ A arquitetura candidata separa um coletor nativo, restrito e majoritariamente de
 ## Execução
 
 Ainda não existe versão distribuível ou assinada do produto.
-Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, o botão **Copiar resumo** disponibiliza contagens sanitizadas para o chamado, sem nomes nem caminhos locais. Os binários dessa pasta ainda não constituem uma release assinada.
+Já existe uma interface de desenvolvimento em `build\x64\Debug\certradar.exe`; ela somente inicia a busca após o usuário pressionar **Iniciar busca**. Ao terminar, **Copiar resumo** disponibiliza contagens sanitizadas para o chamado e **Mostrar arquivo** abre a pasta com o candidato selecionado, sem executar o PFX/P12. Os binários dessa pasta ainda não constituem uma release assinada.
 
 ### Executar os testes do checkpoint atual
 

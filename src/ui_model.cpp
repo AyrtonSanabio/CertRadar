@@ -64,4 +64,19 @@ std::wstring build_search_support_summary(const SearchResult& result) {
     return summary;
 }
 
+CandidateRevealPlan build_candidate_reveal_plan(
+    const SearchResult& result,
+    const std::size_t selection_index) {
+    if (selection_index >= result.candidates.size()) return {};
+
+    const auto& path = result.candidates[selection_index].path;
+    if (path.empty() || !path.is_absolute()) {
+        return {CandidateRevealStatus::unsafe_path, {}};
+    }
+    for (const auto& component : path) {
+        if (component == L"..") return {CandidateRevealStatus::unsafe_path, {}};
+    }
+    return {CandidateRevealStatus::ready, path.lexically_normal()};
+}
+
 }  // namespace certradar
